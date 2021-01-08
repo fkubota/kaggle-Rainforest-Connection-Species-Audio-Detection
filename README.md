@@ -33,23 +33,23 @@ hoge
 トレーニングデータには、トレーニングを支援するために偽陽性ラベルの発生も含まれていることに注意してください。
 
 ファイル
-train_tp.csv - 真の正の種ラベルのトレーニングデータ．
-train_fp.csv - 擬陽性種ラベルのトレーニングデータ．
-sample_submission.csv - 正しいフォーマットのサンプル提出ファイル。
-train/ - トレーニング用の音声ファイル
-test/ - テスト用の音声ファイル; タスクは各音声ファイルに含まれる種を予測することです.
-tfrecords/{train,test}を使用しています。- 競技データは TFRecord 形式で、Recording_id, audio_wav (16bit PCM 形式でエンコードされている) および label_info (列車のみ) を含み、以下の列 (Recording_id を除く) を区切り文字列として提供しています。
-列
-recording_id - 録音用の一意の識別子
-species_id - 種の一意の識別子
-songtype_id - ソングタイプの一意の識別子。
-t_min - アノテーションされた信号の開始秒数．
-f_min - アノテーションされた信号の低周波数．
-t_max - アノテーションされた信号の終了秒数．
-f_max- 注釈された信号の上限周波数
-is_tp- [tfrecords のみ] ラベルが train_tp (1) または train_fp (0) ファイルのものかどうかの指標。
+- train_tp.csv - 真の正の種ラベルのトレーニングデータ．
+- train_fp.csv - 擬陽性種ラベルのトレーニングデータ．
+- sample_submission.csv - 正しいフォーマットのサンプル提出ファイル。
+- train/ - トレーニング用の音声ファイル
+- test/ - テスト用の音声ファイル; タスクは各音声ファイルに含まれる種を予測することです.
+- tfrecords/{train,test}を使用しています。- 競技データは TFRecord 形式で、Recording_id, audio_wav (16bit PCM 形式でエンコードされている) および label_info (列車のみ) を含み、以下の列 (Recording_id を除く) を区切り文字列として提供しています。
 
-www.DeepL.com/Translator（無料版）で翻訳しました。
+列
+- recording_id - 録音用の一意の識別子
+- species_id - 種の一意の識別子
+- songtype_id - ソングタイプの一意の識別子。
+- t_min - アノテーションされた信号の開始秒数．
+- f_min - アノテーションされた信号の低周波数．
+- t_max - アノテーションされた信号の終了秒数．
+- f_max- 注釈された信号の上限周波数
+- is_tp- [tfrecords のみ] ラベルが train_tp (1) または train_fp (0) ファイルのものかどうかの指標。
+
 
 ## Log
 ### 20201006
