@@ -1,1 +1,4 @@
-/home/fkubota/.local/bin/kaggle competitions download -c rfcx-species-audio-detection
+# dataset の ダウンロード
+competitions download -c rfcx-species-audio-detection
+mv kaggleudio-detection.zip ./data_ignore/.
+
