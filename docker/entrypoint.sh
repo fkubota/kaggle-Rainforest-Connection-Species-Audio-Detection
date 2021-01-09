@@ -36,6 +36,7 @@ echo '{ "notebook:enable-output-scrolling": { "command": "notebook:enable-output
 
 # 権限付与
 chmod -R ugo+rw /home/user/.jupyter/lab/
+chmod -R ugo+rw /home/user/.local/
 
 
 # sudo権限の追加(パスワードはhello)
