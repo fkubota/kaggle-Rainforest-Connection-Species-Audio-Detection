@@ -13,7 +13,5 @@ while getopts "p:g:" OPT
       \? ) usage ;;
     esac
   done 
-
-echo "$FLAG_A $FLAG_B"
 sudo docker run --rm -it --gpus $GPU -p $PORT:$PORT -v /home/fkubota/Git/:/home/user/work/ fkubota/rfcx bash
 
