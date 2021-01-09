@@ -5,14 +5,15 @@ if [ $# = 0 ]; then
     exit 1
 fi
 
-while getopts "a:b:c" OPT
+while getopts "p:g:" OPT
   do  
     case $OPT in
-      a ) FLAG_A=$OPTARG;;
-      b ) FLAG_B=$OPTARG;;
-      c ) FLAG_C=$OPTARG;;
+      p ) PORT=$OPTARG;;
+      g ) GPU=$OPTARG;;
       \? ) usage ;;
     esac
   done 
 
 echo "$FLAG_A $FLAG_B"
+sudo docker run --rm -it --gpus $GPU -p $PORT:$PORT -v /home/fkubota/Git/:/home/user/work/ fkubota/rfcx bash
+
