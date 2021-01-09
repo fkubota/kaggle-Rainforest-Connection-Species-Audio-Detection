@@ -22,8 +22,8 @@ RUN pip3 install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio===0.7.2 
 WORKDIR /home/user
 
 # 作業用ディレクトリ
-RUN mkdir -p $HOME/work
-RUN mkdir -p $HOME/.local
+RUN mkdir -p /home/user/work
+RUN mkdir -p /home/user/.local
 
 # -------------------------------
 # jupyterlab

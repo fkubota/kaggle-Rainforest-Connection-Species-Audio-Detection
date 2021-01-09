@@ -1,2 +1,2 @@
 #!/bin/sh
-sudo docker build --no-cache -t fkubota/rfcx .
+sudo docker build --force-rm=true --no-cache -t fkubota/rfcx .
