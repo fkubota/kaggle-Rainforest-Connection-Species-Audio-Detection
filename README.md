@@ -63,3 +63,9 @@ hoge
 
 ### 20200110
 - Dockerで環境構築。たぶん完了。
+
+- `train_fp.csv` について書かれている[discussion](https://www.kaggle.com/c/rfcx-species-audio-detection/discussion/197866)
+	- yukiさんに教えてもらった！
+
+
+
