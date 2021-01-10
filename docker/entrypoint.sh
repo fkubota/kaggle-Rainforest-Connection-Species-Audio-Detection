@@ -33,12 +33,10 @@ mkdir -p /home/user/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
 echo '{ "notebook:enable-output-scrolling": { "command": "notebook:enable-output-scrolling", "keys": [ "S" ], "selector": ".jp-Notebook:focus", "title": "Enable output scrolling", "category": "Notebook Cell Operations" }, "notebook:disable-output-scrolling": { "command": "notebook:disable-output-scrolling", "keys": [ "Shift S" ], "selector": ".jp-Notebook:focus", "title": "disable output scrolling", "category": "Notebook Cell Operations" }, "notebook:run-all-above": { "command": "notebook:run-all-above", "keys": [ "Shift D" ], "selector": ".jp-Notebook:focus", "title": "Run All Above Selected Cells", "category": "Notebook Cell Operations" } }' > \
   /home/user/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/plugin.jupyterlab-settings
 
-
-# 権限付与
-# chmod -R ugo+rw /home/user/
-chmod ug+rw /home/user/
-chmod -R ugo+rw /home/user/.jupyter/lab/
-chmod -R ugo+rw /home/user/.local/
+# user変更
+chown -R user:user /home/user/
+chown -R user:user /home/user/.jupyter/
+chown -R user:user /home/user/.local/
 
 
 # sudo権限の追加(パスワードはhello)
