@@ -1,0 +1,7 @@
+globals:
+  seed: 5713
+  # path_train: '../../data/official/train.csv'
+  # path_test: '../../data/official/test.csv'
+  path_sample_submission: '../../data_ignore/input/sample_submission.csv'
+  dir_save: '../../data/exp/'
+
