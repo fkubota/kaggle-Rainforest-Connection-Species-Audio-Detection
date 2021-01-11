@@ -67,5 +67,18 @@ hoge
 - `train_fp.csv` について書かれている[discussion](https://www.kaggle.com/c/rfcx-species-audio-detection/discussion/197866)
 	- yukiさんに教えてもらった！
 
+- うらたつさんに教えてもらったLwLRAPについての[notebook](https://www.kaggle.com/osciiart/understanding-lwlrap-sorry-it-s-in-japanese)
+	- 今回の評価指標について書かれている。
+
+- 簡単なEDAしてる[notebook](https://www.kaggle.com/mrutyunjaybiswal/rainforest-tfrecords-with-audio-eda-metrics)
+
+Type	Count	N Unique	Mean	StdDev	Min	Max
+f_max	float64	7781	30	6074.83041526796	3386.040304062109	843.75	13687.5
+f_min	float64	7781	24	2827.996428248297	2515.6044200672623	93.75	10687.5
+recording_id	string	7781	3958				
+songtype_id	int64	7781	2	1.3469991003727027	0.9595349149895609	1.0	4.0
+species_id	int64	7781	24	12.138671121963759	7.068807743355269	0.0	23.0
+t_max	float64	7781	6089	31.267911039712118	17.496989105075077	0.768	59.9947
+t_min	float64	7781	6090	28.627829636293537	17.461603453450916	0.0107	59.3013
 
 
