@@ -2,7 +2,10 @@ import os
 import yaml
 import subprocess
 import numpy as np
+import pandas as pd
 from loguru import logger
+import get_funcs as gf
+from ipdb import set_trace as st
 
 
 def init_exp(config):
@@ -18,12 +21,16 @@ def init_exp(config):
 
     _dir = os.path.dirname(os.path.abspath(__file__))
     exp_name = _dir.split('/')[-1]
-    dir_save_exp = f'{config["globals"]["dir_save"]}{exp_name}'
-    if not os.path.exists(dir_save_exp):
-        os.makedirs(dir_save_exp)
+    logger.info(f'exp_name: {exp_name}')
+    dir_save = f'{config["globals"]["dir_save"]}{exp_name}'
+    dir_save_ignore = f'{config["globals"]["dir_save_ignore"]}{exp_name}'
+    if not os.path.exists(dir_save):
+        os.makedirs(dir_save)
+    if not os.path.exists(dir_save_ignore):
+        os.makedirs(dir_save_ignore)
 
     logger.info(':: out ::')
-    return dir_save_exp
+    return dir_save, dir_save_ignore
 
 
 def main():
@@ -36,8 +43,26 @@ def main():
         config = yaml.safe_load(yml)
 
     # init
-    dir_save_exp = init_exp(config)
-    print(dir_save_exp)
+    dir_save, dir_save_ignore = init_exp(config)
+
+    # config
+    n_fold = config['split']['n_fold']
+    path_trn_tp = config['globals']['path_train_tp']
+
+    # load data
+    trn_tp = pd.read_csv(path_trn_tp)
+
+    for i_fold in range(n_fold):
+        # 学習を行う
+        logger.info(f'fold {i_fold + 1} - start training')
+
+        # データセットの用意
+        trn_idxs, val_idxs = gf.get_index_fold(trn_tp, i_fold, config)
+        trn_tp_trn, trn_tp_val = trn_tp.iloc[trn_idxs], trn_tp.iloc[val_idxs]
+
+        # gf
+        # trn_loader = gf.get_loader(df, 'train', config)
+        # val_loader = gf.get_loader(df, 'valid', config)
 
 
 if __name__ == "__main__":

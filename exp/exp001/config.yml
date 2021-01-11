@@ -1,7 +1,18 @@
 globals:
   seed: 5713
+  debug: True
   # path_train: '../../data/official/train.csv'
   # path_test: '../../data/official/test.csv'
+  dir_train: '../../data_ignore/input/train/'
+  dir_test: '../../data_ignore/input/test/'
+  path_train_tp: '../../data_ignore/input/train_tp.csv'
   path_sample_submission: '../../data_ignore/input/sample_submission.csv'
   dir_save: '../../data/exp/'
+  dir_save_ignore: '../../data_ignore/exp/'
 
+dataset:
+  period: 5
+
+split:
+  seed: 5713
+  n_fold: 5
