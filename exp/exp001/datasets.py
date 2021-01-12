@@ -1,5 +1,6 @@
 import cv2
 import librosa
+import librosa.display
 import numpy as np
 import soundfile as sf
 from ipdb import set_trace as st
@@ -45,8 +46,10 @@ class SpectrogramDataset(data.Dataset):
         self.df = df
         self.unique_rec = df['recording_id'].unique()
         self.dir_data = dir_data
-        self.img_size = config['img_size']
-        self.period = config['period']
+        self.img_size = config['params']['img_size']
+        self.period = config['params']['period']
+        self.shift_duration = config['params']['shift_duration']
+        self.melspec_params = config['melspec_params']
         # self.melspectrogram_parameters = config['melspectrogram_parameters']
 
     def __len__(self):
@@ -54,22 +57,40 @@ class SpectrogramDataset(data.Dataset):
 
     def __getitem__(self, idx):
         rec = self.unique_rec[idx]
-        df_rec = self.df.query('recording_id == @rec')
-        species_id = df_rec["species_id"].values[0]
         path_flac = f'{self.dir_data}{rec}.flac'
+        df_rec = self.df.query('recording_id == @rec')
+        n_label = len(df_rec)
 
+        # どの labelを使うか選ぶ
+        idx_choice = np.random.randint(n_label)
+
+        species_id = df_rec["species_id"].values[idx_choice]
+        t_min = df_rec['t_min'].values[idx_choice]
+        t_max = df_rec['t_max'].values[idx_choice]
+        # t_center = t_min + (t_max - t_min)/2
+
+        # load
         y, sr = sf.read(path_flac)
-        st()
 
-        len_y = len(y)
+        # ランダムに切り取る範囲の左恥
+        # len_y = len(y)
+        t_left = t_min - self.shift_duration
         effective_length = sr * self.period
 
-        start = np.random.randint(len_y - effective_length)
-        y = y[start:start + effective_length].astype(np.float32)
+        start = int(t_left * sr + np.random.randint(sr * self.shift_duration))
+        y_crop = y[start:start+effective_length].astype(np.float32)
 
         melspec = librosa.feature.melspectrogram(
-                y, sr=sr, **self.melspectrogram_parameters)
+                y_crop, sr=sr, **self.melspec_params)
         melspec = librosa.power_to_db(melspec).astype(np.float32)
+        librosa.display.specshow(
+                melspec, sr=sr, x_axis='time', y_axis='linear')
+        # -----
+        import matplotlib.pyplot as plt
+        plt.title(f'{rec} [{t_min}~{t_max}], [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]  ')
+        plt.show()
+        # -----
+
         image = mono_to_color(melspec)
         height, width, _ = image.shape
         image = cv2.resize(image, (int(width * self.img_size / height), self.img_size))

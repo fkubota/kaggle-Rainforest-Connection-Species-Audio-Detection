@@ -9,7 +9,7 @@ from sklearn.model_selection import GroupKFold
 def get_trn_val_loader(df, phase, config):
     dataset_config = config["dataset"]
     name = dataset_config['name']
-    params = dataset_config['params']
+    # params = dataset_config['params']
     loader_config = config["loader"][phase]
     dir_data = config['globals']['dir_train']
 
@@ -17,7 +17,7 @@ def get_trn_val_loader(df, phase, config):
             df,
             dir_data=dir_data,
             phase=phase,
-            config=params)
+            config=dataset_config)
     # dataset.__getitem__(2)
     dataset.__getitem__(14)
     loader = data.DataLoader(dataset, **loader_config)

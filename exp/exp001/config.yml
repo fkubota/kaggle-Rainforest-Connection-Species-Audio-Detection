@@ -12,7 +12,12 @@ dataset:
   name: 'SpectrogramDataset'
   params:
     period: 5
+    shift_duration: 4
     img_size: 224
+  melspec_params:
+    n_mels: 128
+    # fmin: 20
+    # fmax: 16000
 
 loader:
   train:
