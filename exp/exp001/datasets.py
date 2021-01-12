@@ -1,9 +1,8 @@
-import os
 import cv2
 import librosa
 import numpy as np
-import pandas as pd
 import soundfile as sf
+from ipdb import set_trace as st
 import torch.utils.data as data
 
 
@@ -40,43 +39,36 @@ def mono_to_color(X: np.ndarray,
 class SpectrogramDataset(data.Dataset):
     def __init__(self,
                  df,
-                 datadir,
+                 dir_data,
                  phase,
                  config):
         self.df = df
-        self.datadir = datadir
+        self.unique_rec = df['recording_id'].unique()
+        self.dir_data = dir_data
         self.img_size = config['img_size']
-        self.melspectrogram_parameters = config['melspectrogram_parameters']
+        self.period = config['period']
+        # self.melspectrogram_parameters = config['melspectrogram_parameters']
 
     def __len__(self):
-        return len(self.df)
+        return len(self.unique_rec)
 
     def __getitem__(self, idx):
-        sample = self.df.loc[idx, :]
-        wav_name = sample["resampled_filename"]
-        ebird_code = sample["ebird_code"]
-        train_resampled_audio_dirs = [self.datadir + "/birdsong-resampled-train-audio-{:0>2}".format(i) for i in range(5)]
-        for dir_ in train_resampled_audio_dirs:
-            path = f'{dir_}/{ebird_code}/{wav_name}'
-            if os.path.exists(path):
-                path_wav = path
+        rec = self.unique_rec[idx]
+        df_rec = self.df.query('recording_id == @rec')
+        species_id = df_rec["species_id"].values[0]
+        path_flac = f'{self.dir_data}{rec}.flac'
 
-        y, sr = sf.read(path_wav)
+        y, sr = sf.read(path_flac)
+        st()
 
         len_y = len(y)
-        effective_length = sr * PERIOD
-        if len_y < effective_length:
-            new_y = np.zeros(effective_length, dtype=y.dtype)
-            start = np.random.randint(effective_length - len_y)
-            new_y[start:start + len_y] = y
-            y = new_y.astype(np.float32)
-        elif len_y > effective_length:
-            start = np.random.randint(len_y - effective_length)
-            y = y[start:start + effective_length].astype(np.float32)
-        else:
-            y = y.astype(np.float32)
+        effective_length = sr * self.period
 
-        melspec = librosa.feature.melspectrogram(y, sr=sr, **self.melspectrogram_parameters)
+        start = np.random.randint(len_y - effective_length)
+        y = y[start:start + effective_length].astype(np.float32)
+
+        melspec = librosa.feature.melspectrogram(
+                y, sr=sr, **self.melspectrogram_parameters)
         melspec = librosa.power_to_db(melspec).astype(np.float32)
         image = mono_to_color(melspec)
         height, width, _ = image.shape

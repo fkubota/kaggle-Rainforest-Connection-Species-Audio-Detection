@@ -58,11 +58,10 @@ def main():
 
         # データセットの用意
         trn_idxs, val_idxs = gf.get_index_fold(trn_tp, i_fold, config)
-        trn_tp_trn, trn_tp_val = trn_tp.iloc[trn_idxs], trn_tp.iloc[val_idxs]
-
-        # gf
-        # trn_loader = gf.get_loader(df, 'train', config)
-        # val_loader = gf.get_loader(df, 'valid', config)
+        trn_tp_trn = trn_tp.iloc[trn_idxs].reset_index(drop=True)
+        trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
+        trn_loader = gf.get_trn_val_loader(trn_tp_trn, 'train', config)
+        val_loader = gf.get_trn_val_loader(trn_tp_val, 'valid', config)
 
 
 if __name__ == "__main__":

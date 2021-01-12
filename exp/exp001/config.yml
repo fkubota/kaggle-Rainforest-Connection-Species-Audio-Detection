@@ -1,8 +1,6 @@
 globals:
   seed: 5713
   debug: True
-  # path_train: '../../data/official/train.csv'
-  # path_test: '../../data/official/test.csv'
   dir_train: '../../data_ignore/input/train/'
   dir_test: '../../data_ignore/input/test/'
   path_train_tp: '../../data_ignore/input/train_tp.csv'
@@ -11,7 +9,20 @@ globals:
   dir_save_ignore: '../../data_ignore/exp/'
 
 dataset:
-  period: 5
+  name: 'SpectrogramDataset'
+  params:
+    period: 5
+    img_size: 224
+
+loader:
+  train:
+    batch_size: 20
+    shuffle: True
+    num_workers: 2
+  valid:
+    batch_size: 10
+    shuffle: False
+    num_workers: 2
 
 split:
   seed: 5713
