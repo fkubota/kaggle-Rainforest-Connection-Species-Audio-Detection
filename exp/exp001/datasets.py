@@ -72,10 +72,10 @@ class SpectrogramDataset(data.Dataset):
         y, sr = sf.read(path_flac)
 
         # ランダムに切り取る範囲の左恥
-        # len_y = len(y)
         t_left = t_min - self.shift_duration
         effective_length = sr * self.period
 
+        # spectrogramの計算
         start = int(t_left * sr + np.random.randint(sr * self.shift_duration))
         y_crop = y[start:start+effective_length].astype(np.float32)
 
@@ -84,19 +84,22 @@ class SpectrogramDataset(data.Dataset):
                 sr=sr,
                 **self.melspec_params)
         melspec = librosa.power_to_db(melspec).astype(np.float32)
-        # -----
+
+        # ----- 可視化 -----
         # t_max = df_rec['t_max'].values[idx_choice]
         # librosa.display.specshow(
         #         # melspec, sr=sr, x_axis='time', y_axis='mel')
         #         melspec, sr=sr, x_axis='time', y_axis='mel')
         # import matplotlib.pyplot as plt
-        # plt.title(f'{rec} [{t_min}~{t_max}], [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]  ')
+        # plt.title(
+        #         f'{rec} [{t_min}~{t_max}],
+        #         [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
         # plt.show()
         # -----
 
+        # 入力画像の加工
         image = mono_to_color(melspec)
         height, width, _ = image.shape
-        st()
         image = cv2.resize(
                 image,
                 (int(width * self.img_size / height), self.img_size)
@@ -104,6 +107,7 @@ class SpectrogramDataset(data.Dataset):
         image = np.moveaxis(image, 2, 0)
         image = (image / 255.0).astype(np.float32)
 
-        labels = np.zeros(len(BIRD_CODE), dtype=int)
-        labels[BIRD_CODE[ebird_code]] = 1
+        # ラベルの作成
+        labels = np.zeros(self.df.species_id.nunique(), dtype=int)
+        labels[species_id] = 1
         return image, labels
