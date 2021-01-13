@@ -66,7 +66,6 @@ class SpectrogramDataset(data.Dataset):
 
         species_id = df_rec["species_id"].values[idx_choice]
         t_min = df_rec['t_min'].values[idx_choice]
-        t_max = df_rec['t_max'].values[idx_choice]
         # t_center = t_min + (t_max - t_min)/2
 
         # load
@@ -81,19 +80,27 @@ class SpectrogramDataset(data.Dataset):
         y_crop = y[start:start+effective_length].astype(np.float32)
 
         melspec = librosa.feature.melspectrogram(
-                y_crop, sr=sr, **self.melspec_params)
+                y_crop,
+                sr=sr,
+                **self.melspec_params)
         melspec = librosa.power_to_db(melspec).astype(np.float32)
-        librosa.display.specshow(
-                melspec, sr=sr, x_axis='time', y_axis='linear')
         # -----
-        import matplotlib.pyplot as plt
-        plt.title(f'{rec} [{t_min}~{t_max}], [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]  ')
-        plt.show()
+        # t_max = df_rec['t_max'].values[idx_choice]
+        # librosa.display.specshow(
+        #         # melspec, sr=sr, x_axis='time', y_axis='mel')
+        #         melspec, sr=sr, x_axis='time', y_axis='mel')
+        # import matplotlib.pyplot as plt
+        # plt.title(f'{rec} [{t_min}~{t_max}], [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]  ')
+        # plt.show()
         # -----
 
         image = mono_to_color(melspec)
         height, width, _ = image.shape
-        image = cv2.resize(image, (int(width * self.img_size / height), self.img_size))
+        st()
+        image = cv2.resize(
+                image,
+                (int(width * self.img_size / height), self.img_size)
+                )
         image = np.moveaxis(image, 2, 0)
         image = (image / 255.0).astype(np.float32)
 

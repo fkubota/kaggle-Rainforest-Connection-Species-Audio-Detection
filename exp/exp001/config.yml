@@ -16,6 +16,7 @@ dataset:
     img_size: 224
   melspec_params:
     n_mels: 128
+    # n_mels: 256
     # fmin: 20
     # fmax: 16000
 

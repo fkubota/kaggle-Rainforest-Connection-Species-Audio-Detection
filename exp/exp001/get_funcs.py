@@ -18,8 +18,8 @@ def get_trn_val_loader(df, phase, config):
             dir_data=dir_data,
             phase=phase,
             config=dataset_config)
-    # dataset.__getitem__(2)
-    dataset.__getitem__(14)
+    dataset.__getitem__(2)
+    # dataset.__getitem__(14)
     loader = data.DataLoader(dataset, **loader_config)
     return loader
 
