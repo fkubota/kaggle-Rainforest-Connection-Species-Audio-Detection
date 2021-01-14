@@ -33,3 +33,14 @@ loader:
 split:
   seed: 5713
   n_fold: 5
+ 
+loss:
+  name: ResNetLoss
+  params:
+    loss_type: bce
+
+model:
+  name: ResNet18
+  params:
+    pretrained: True
+    n_classes: 24

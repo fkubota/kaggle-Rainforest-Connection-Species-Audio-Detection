@@ -1,5 +1,9 @@
 import datasets
+import criterion
+import model_list
 import numpy as np
+from torch import nn
+from loguru import logger
 from ipdb import set_trace as st
 import torch.utils.data as data
 from sklearn.utils import shuffle
@@ -18,8 +22,10 @@ def get_trn_val_loader(df, phase, config):
             dir_data=dir_data,
             phase=phase,
             config=dataset_config)
+    # 動作確認
     # dataset.__getitem__(2)  # single label
-    dataset.__getitem__(14)   # multi labels
+    # dataset.__getitem__(14)   # multi labels
+
     loader = data.DataLoader(dataset, **loader_config)
     return loader
 
@@ -42,3 +48,36 @@ def get_index_fold(trn_tp, i_fold, config):
             splitter.split(
                 X=dummy_x,
                 groups=recording_ids))[i_fold]
+
+
+def get_criterion(config):
+    loss_config = config["loss"]
+    loss_name = loss_config["name"]
+    loss_params = loss_config["params"]
+    if (loss_params is None) or (loss_params == ""):
+        loss_params = {}
+
+    if hasattr(nn, loss_name):
+        criterion_ = nn.__getattribute__(loss_name)(**loss_params)
+    else:
+        criterion_cls = criterion.__getattribute__(loss_name)
+        if criterion_cls is not None:
+            criterion_ = criterion_cls(**loss_params)
+        else:
+            raise NotImplementedError
+
+    return criterion_
+
+
+def get_model(config):
+    logger.info(':: in ::')
+    model_config = config["model"]
+    model_name = model_config["name"]
+    model_params = model_config["params"]
+
+    model = model_list.__getattribute__(model_name)(model_params)
+
+    # model = eval(model_name)(model_params)
+    logger.info(':: out ::')
+    return model
+

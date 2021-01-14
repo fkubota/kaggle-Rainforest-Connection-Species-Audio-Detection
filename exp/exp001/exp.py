@@ -1,11 +1,13 @@
 import os
 import yaml
+import result_handler as rh
 import subprocess
 import numpy as np
 import pandas as pd
 from loguru import logger
 import get_funcs as gf
 from ipdb import set_trace as st
+import torchvision.models as models
 
 
 def init_exp(config):
@@ -62,6 +64,14 @@ def main():
         trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
         trn_loader = gf.get_trn_val_loader(trn_tp_trn, 'train', config)
         val_loader = gf.get_trn_val_loader(trn_tp_val, 'valid', config)
+
+        model = gf.get_model(config)
+        rh.save_model_architecture(dir_save, model)
+        st()
+        criterion = gf.get_criterion(config)
+        # criterion
+        # optimizer
+        # scheduler
 
 
 if __name__ == "__main__":
