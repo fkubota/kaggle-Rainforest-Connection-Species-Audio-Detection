@@ -1,13 +1,12 @@
+from ipdb import set_trace as st
+import configuration as C
+import trainner
 import os
 import yaml
 import result_handler as rh
 import subprocess
-import numpy as np
 import pandas as pd
 from loguru import logger
-import configuration as C
-from ipdb import set_trace as st
-import torchvision.models as models
 
 
 def init_exp(config):
@@ -59,18 +58,19 @@ def main():
         # 学習を行う
         logger.info(f'fold {i_fold + 1} - start training')
 
+        _ = trainner.train_fold(i_fold, trn_tp, config)
         # データセットの用意
-        trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
-        trn_tp_trn = trn_tp.iloc[trn_idxs].reset_index(drop=True)
-        trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
-        trn_loader = C.get_trn_val_loader(trn_tp_trn, 'train', config)
-        val_loader = C.get_trn_val_loader(trn_tp_val, 'valid', config)
-
-        model = C.get_model(config)
-        criterion = C.get_criterion(config)
-        optimizer = C.get_optimizer(model, config)
-        scheduler = C.get_scheduler(optimizer, config)
-
+        # trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
+        # trn_tp_trn = trn_tp.iloc[trn_idxs].reset_index(drop=True)
+        # trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
+        # trn_loader = C.get_trn_val_loader(trn_tp_trn, 'train', config)
+        # val_loader = C.get_trn_val_loader(trn_tp_val, 'valid', config)
+        #
+        # model = C.get_model(config)
+        # criterion = C.get_criterion(config)
+        # optimizer = C.get_optimizer(model, config)
+        # scheduler = C.get_scheduler(optimizer, config)
+        #
 
 if __name__ == "__main__":
     main()

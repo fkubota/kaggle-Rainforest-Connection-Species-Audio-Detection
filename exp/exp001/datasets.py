@@ -1,3 +1,4 @@
+from loguru import logger
 import cv2
 import librosa
 import librosa.display
@@ -60,6 +61,7 @@ class SpectrogramDataset(data.Dataset):
         path_flac = f'{self.dir_data}{rec}.flac'
         df_rec = self.df.query('recording_id == @rec')
         n_label = len(df_rec)
+        logger.info(f'{idx}, {rec}')
 
         # どの labelを使うか選ぶ
         idx_choice = np.random.randint(n_label)
