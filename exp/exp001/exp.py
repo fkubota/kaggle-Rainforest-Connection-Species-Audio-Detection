@@ -5,7 +5,7 @@ import subprocess
 import numpy as np
 import pandas as pd
 from loguru import logger
-import get_funcs as gf
+import configuration as C
 from ipdb import set_trace as st
 import torchvision.models as models
 
@@ -46,6 +46,7 @@ def main():
 
     # init
     dir_save, dir_save_ignore = init_exp(config)
+    rh.save_model_architecture(dir_save, C.get_model(config))
 
     # config
     n_fold = config['split']['n_fold']
@@ -59,19 +60,16 @@ def main():
         logger.info(f'fold {i_fold + 1} - start training')
 
         # データセットの用意
-        trn_idxs, val_idxs = gf.get_index_fold(trn_tp, i_fold, config)
+        trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
         trn_tp_trn = trn_tp.iloc[trn_idxs].reset_index(drop=True)
         trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
-        trn_loader = gf.get_trn_val_loader(trn_tp_trn, 'train', config)
-        val_loader = gf.get_trn_val_loader(trn_tp_val, 'valid', config)
+        trn_loader = C.get_trn_val_loader(trn_tp_trn, 'train', config)
+        val_loader = C.get_trn_val_loader(trn_tp_val, 'valid', config)
 
-        model = gf.get_model(config)
-        rh.save_model_architecture(dir_save, model)
-        st()
-        criterion = gf.get_criterion(config)
-        # criterion
-        # optimizer
-        # scheduler
+        model = C.get_model(config)
+        criterion = C.get_criterion(config)
+        optimizer = C.get_optimizer(model, config)
+        scheduler = C.get_scheduler(optimizer, config)
 
 
 if __name__ == "__main__":

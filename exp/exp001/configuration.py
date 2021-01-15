@@ -1,10 +1,11 @@
+from ipdb import set_trace as st
 import datasets
 import criterion
 import model_list
 import numpy as np
 from torch import nn
+import torch.optim as optim
 from loguru import logger
-from ipdb import set_trace as st
 import torch.utils.data as data
 from sklearn.utils import shuffle
 from sklearn.model_selection import GroupKFold
@@ -81,3 +82,21 @@ def get_model(config):
     logger.info(':: out ::')
     return model
 
+
+def get_optimizer(model, config):
+    optimizer_config = config["optimizer"]
+    optimizer_name = optimizer_config.get("name")
+
+    return optim.__getattribute__(optimizer_name)(model.parameters(),
+                                                  **optimizer_config["params"])
+
+
+def get_scheduler(optimizer, config):
+    scheduler_config = config["scheduler"]
+    scheduler_name = scheduler_config.get("name")
+
+    if scheduler_name is None:
+        return
+    else:
+        return optim.lr_scheduler.__getattribute__(scheduler_name)(
+            optimizer, **scheduler_config["params"])
