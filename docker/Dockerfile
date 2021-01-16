@@ -7,7 +7,7 @@ WORKDIR /code
 RUN apt-get update && apt-get install -y software-properties-common 
 # RUN add-apt-repository ppa:jonathanf/python-3.8 && apt-get update && apt-get install -y python3.8
 RUN add-apt-repository ppa:deadsnakes/ppa && apt-get update && apt-get install -y python3.8
-RUN apt-get update && apt-get install -y build-essential libssl-dev libffi-dev python3.8-dev python3-pip curl nodejs npm gnupg vim gosu ffmpeg htop git tmux graphviz sudo
+RUN apt-get update && apt-get install -y build-essential libssl-dev libffi-dev python3.8-dev python3-pip python3-ipdb curl nodejs npm gnupg vim gosu ffmpeg htop git tmux graphviz sudo
 
 # python3.8 をデフォルトに
 RUN mkdir -p $HOME/bin
