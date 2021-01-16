@@ -56,21 +56,9 @@ def main():
 
     for i_fold in range(n_fold):
         # 学習を行う
-        logger.info(f'fold {i_fold + 1} - start training')
+        logger.info(f'fold {i_fold + 1}/{n_fold} - start training')
 
         _ = trainner.train_fold(i_fold, trn_tp, config)
-        # データセットの用意
-        # trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
-        # trn_tp_trn = trn_tp.iloc[trn_idxs].reset_index(drop=True)
-        # trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
-        # trn_loader = C.get_trn_val_loader(trn_tp_trn, 'train', config)
-        # val_loader = C.get_trn_val_loader(trn_tp_val, 'valid', config)
-        #
-        # model = C.get_model(config)
-        # criterion = C.get_criterion(config)
-        # optimizer = C.get_optimizer(model, config)
-        # scheduler = C.get_scheduler(optimizer, config)
-        #
 
 if __name__ == "__main__":
     main()

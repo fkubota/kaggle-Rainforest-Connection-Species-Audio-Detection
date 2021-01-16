@@ -23,7 +23,7 @@ dataset:
 
 loader:
   train:
-    batch_size: 20
+    batch_size: 25
     # batch_size: 1
     shuffle: True
     num_workers: 5

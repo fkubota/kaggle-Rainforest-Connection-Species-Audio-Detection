@@ -1,4 +1,5 @@
 from ipdb import set_trace as st
+import utils
 import datasets
 import criterion
 import model_list
@@ -39,16 +40,23 @@ def get_index_fold(trn_tp, i_fold, config):
     config_split = config['split']
     n_fold = config_split['n_fold']
     seed = config_split['seed']
+    debug = config['globals']['debug']
 
     recording_ids = trn_tp['recording_id'].values
     dummy_x = np.zeros(len(recording_ids))
     dummy_x_shf, recording_ids_shf = shuffle(
             dummy_x, recording_ids, random_state=seed)
     splitter = GroupKFold(n_splits=n_fold)
-    return list(
-            splitter.split(
-                X=dummy_x,
-                groups=recording_ids))[i_fold]
+
+    trn_idxs, val_idxs = list(splitter.split(
+        X=dummy_x, groups=recording_ids
+        ))[i_fold]
+
+    if debug:
+        trn_idxs, val_idxs = utils.get_debug_idx(
+                trn_tp, trn_idxs, val_idxs, config)
+
+    return trn_idxs, val_idxs
 
 
 def get_criterion(config):
