@@ -24,10 +24,11 @@ dataset:
 
 loader:
   train:
-    # batch_size: 20
-    batch_size: 1
+    batch_size: 20
+    # batch_size: 1
     shuffle: True
     num_workers: 2
+    # num_workers: 1
   valid:
     batch_size: 10
     shuffle: False

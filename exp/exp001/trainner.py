@@ -29,13 +29,11 @@ def train_fold(i_fold, trn_tp, config):
     model.train()
     epoch_train_loss = 0
     for batch_idx, (data, target) in enumerate(trn_loader):
-        logger.info(batch_idx)
         data, target = data.to(device), target.to(device)
         if mixup:
             data, targets_a, targets_b, lam = mixup_data(data, target, alpha=1.0)
     
         optimizer.zero_grad()
-        st()
         output = model(data)
         if mixup:
             loss = mixup_criterion(criterion, output, targets_a, targets_b, lam)

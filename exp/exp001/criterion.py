@@ -13,10 +13,10 @@ class ResNetLoss(nn.Module):
 
     def forward(self, input_, target):
         if self.loss_type == "ce":
-            input_ = input_["multiclass_proba"]
+            input_ = input_["output_sigmoid"]
             target = target.argmax(1).long()
         elif self.loss_type == "bce":
-            input_ = input_["multilabel_proba"]
+            input_ = input_["output_sigmoid"]
             target = target.float()
 
         return self.loss(input_, target)

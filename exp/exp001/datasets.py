@@ -61,7 +61,7 @@ class SpectrogramDataset(data.Dataset):
         path_flac = f'{self.dir_data}{rec}.flac'
         df_rec = self.df.query('recording_id == @rec')
         n_label = len(df_rec)
-        logger.info(f'{idx}, {rec}')
+        # logger.info(f'{idx}, {rec}')
 
         # どの labelを使うか選ぶ
         idx_choice = np.random.randint(n_label)
@@ -73,14 +73,21 @@ class SpectrogramDataset(data.Dataset):
         # load
         y, sr = sf.read(path_flac)
 
-        # ランダムに切り取る範囲の左恥
-        t_left = t_min - self.shift_duration
+        # ランダムに切り取る範囲の左端
         effective_length = sr * self.period
+        t_left = t_min - self.shift_duration
+        if t_left < 0:
+            # 0~t_minの間でスタート
+            start = int(np.random.randint(sr * t_min))
+        else:
+            # t_leftからshift_durationの間でスタート
+            start = int(
+                    t_left * sr + np.random.randint(sr * self.shift_duration))
 
         # spectrogramの計算
-        start = int(t_left * sr + np.random.randint(sr * self.shift_duration))
         y_crop = y[start:start+effective_length].astype(np.float32)
 
+        # logger.info(f'y_crop: {len(y_crop)}')
         melspec = librosa.feature.melspectrogram(
                 y_crop,
                 sr=sr,
@@ -93,9 +100,7 @@ class SpectrogramDataset(data.Dataset):
         #         # melspec, sr=sr, x_axis='time', y_axis='mel')
         #         melspec, sr=sr, x_axis='time', y_axis='mel')
         # import matplotlib.pyplot as plt
-        # plt.title(
-        #         f'{rec} [{t_min}~{t_max}],
-        #         [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
+        # plt.title(f'{rec} [{t_min}~{t_max}], [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
         # plt.show()
         # -----
 
