@@ -149,6 +149,10 @@ hoge
 
 ### 20200115	
 - exp001
-	- train cv部分の作成
+	- train_fold部分の作成
 
 ### 20200116
+- exp001
+	- train_fold部分の作成
+	- resnet18の実装
+	- debugモードの追加
