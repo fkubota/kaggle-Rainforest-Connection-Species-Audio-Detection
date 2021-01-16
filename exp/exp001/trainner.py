@@ -20,7 +20,7 @@ def train_fold(i_fold, trn_tp, config):
     trn_loader = C.get_trn_val_loader(trn_tp_trn, 'train', config)
     val_loader = C.get_trn_val_loader(trn_tp_val, 'valid', config)
 
-    model = C.get_model(config)
+    model = C.get_model(config).to(device)
     criterion = C.get_criterion(config)
     optimizer = C.get_optimizer(model, config)
     scheduler = C.get_scheduler(optimizer, config)
@@ -29,6 +29,7 @@ def train_fold(i_fold, trn_tp, config):
     model.train()
     epoch_train_loss = 0
     for batch_idx, (data, target) in enumerate(trn_loader):
+        logger.info(f'{batch_idx + 1}/{len(trn_loader)}')
         data, target = data.to(device), target.to(device)
         if mixup:
             data, targets_a, targets_b, lam = mixup_data(data, target, alpha=1.0)

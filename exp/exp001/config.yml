@@ -2,6 +2,7 @@ globals:
   seed: 5713
   debug: True
   mixup: False
+  # device: cpu
   device: cuda
   dir_train: '../../data_ignore/input/train/'
   dir_test: '../../data_ignore/input/test/'
@@ -27,8 +28,8 @@ loader:
     batch_size: 20
     # batch_size: 1
     shuffle: True
-    num_workers: 2
-    # num_workers: 1
+    num_workers: 5
+    # num_workers: 0
   valid:
     batch_size: 10
     shuffle: False

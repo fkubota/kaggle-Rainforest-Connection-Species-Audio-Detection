@@ -84,6 +84,11 @@ class SpectrogramDataset(data.Dataset):
             start = int(
                     t_left * sr + np.random.randint(sr * self.shift_duration))
 
+        if start/sr >= len(y)/sr - self.period:
+            # start が右端に行き過ぎてeffective_length以下になってしまった時の処理
+            start = int((len(y)/sr - self.period) * sr)
+
+
         # spectrogramの計算
         y_crop = y[start:start+effective_length].astype(np.float32)
 
@@ -117,4 +122,8 @@ class SpectrogramDataset(data.Dataset):
         # ラベルの作成
         labels = np.zeros(self.df.species_id.nunique(), dtype=int)
         labels[species_id] = 1
+        # logger.info(f't_left: {t_left}')
+        # logger.info(f'len(y_crop): {len(y_crop)}')
+        # logger.info(f'start_sec: {start/sr:.3f}')
+        # logger.info(f'image.shape: {image.shape}\n')
         return image, labels
