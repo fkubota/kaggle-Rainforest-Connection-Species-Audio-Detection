@@ -1,3 +1,4 @@
+from ipdb import set_trace as st
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -15,8 +16,10 @@ class ResNet18(nn.Module):
         pretrained = params['pretrained']
 
         self.resnet = models.resnet18(pretrained=pretrained)
+        self.resnet.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
         in_features = self.resnet.fc.in_features
         self.resnet.fc = nn.Linear(in_features, num_classes)
+        st()
 
     def forward(self, x):
         x = self.resnet(x)

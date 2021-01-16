@@ -35,6 +35,7 @@ def train_fold(i_fold, trn_tp, config):
             data, targets_a, targets_b, lam = mixup_data(data, target, alpha=1.0)
     
         optimizer.zero_grad()
+        st()
         output = model(data)
         if mixup:
             loss = mixup_criterion(criterion, output, targets_a, targets_b, lam)

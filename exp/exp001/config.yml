@@ -11,7 +11,7 @@ globals:
   dir_save_ignore: '../../data_ignore/exp/'
 
 dataset:
-  name: 'SpectrogramDataset'
+  name: SpectrogramDataset
   params:
     period: 5
     shift_duration: 4
@@ -24,7 +24,8 @@ dataset:
 
 loader:
   train:
-    batch_size: 20
+    # batch_size: 20
+    batch_size: 1
     shuffle: True
     num_workers: 2
   valid:
