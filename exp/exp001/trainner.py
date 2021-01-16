@@ -3,6 +3,7 @@ from loguru import logger
 import configuration as C
 from criterion import mixup_criterion
 from utils import mixup_data
+import torch
 
 
 # def train_fold(self, i_fold: int) -> Tuple[
@@ -13,7 +14,8 @@ def train_fold(i_fold, trn_tp, config):
         # model, device, train_loader, optimizer,
         # scheduler, loss_func, mixup=False):
     mixup = config['globals']['mixup']
-    device = config['globals']['device']
+    # device = config['globals']['device']
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
     trn_tp_trn = trn_tp.iloc[trn_idxs].reset_index(drop=True)
     trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
