@@ -23,13 +23,16 @@ def init_exp(config):
     hash_ = subprocess.check_output(cmd.split()).strip().decode('utf-8')
     logger.info(f'hash: {hash_}')
 
+    # 保存ディレクトリの用意
     dir_save, dir_save_ignore, exp_name = U.get_save_dir_exp(config)
     logger.info(f'exp_name: {exp_name}')
-
     if not os.path.exists(dir_save):
         os.makedirs(dir_save)
     if not os.path.exists(dir_save_ignore):
         os.makedirs(dir_save_ignore)
+
+    # set_seed
+    U.set_seed(config['globals']['seed'])
 
     logger.info(':: out ::')
     return dir_save, dir_save_ignore

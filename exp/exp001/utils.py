@@ -6,7 +6,7 @@ from loguru import logger
 import torch
 
 
-def set_seed(seed: int = 42):
+def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)

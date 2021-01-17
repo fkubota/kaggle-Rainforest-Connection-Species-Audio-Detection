@@ -1,6 +1,6 @@
 globals:
   seed: 5713
-  debug: False
+  debug: True
   mixup: False
   # num_epochs: 45
   num_epochs: 2
@@ -27,8 +27,8 @@ dataset:
 
 loader:
   train:
-    batch_size: 30
-    # batch_size: 3
+    # batch_size: 30
+    batch_size: 3
     shuffle: True
     num_workers: 2
     # num_workers: 0
