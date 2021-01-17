@@ -47,7 +47,7 @@ def train_cv(config):
         early_stopping = EarlyStopping(patience=12,
                                        verbose=True,
                                        path=save_path)
-        for epoch in progress_bar(range(1, n_epoch+1)):
+        for epoch in range(1, n_epoch+1):
             # 学習を行う
             result_dict = train_fold(i_fold, trn_tp, config)
             val_idxs = result_dict['val_idxs']
