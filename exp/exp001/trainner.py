@@ -19,6 +19,7 @@ def train_cv(config):
     n_fold = config['split']['n_fold']
     n_epoch = config['globals']['num_epochs']
     path_trn_tp = config['path']['path_train_tp']
+    n_classes = config['model']['params']['n_classes']
     _model = C.get_model(config)
     _, dir_save_ignore_exp, _ = U.get_save_dir_exp(config)
 
@@ -26,6 +27,10 @@ def train_cv(config):
     trn_tp = pd.read_csv(path_trn_tp)
 
     # oof_sig = np.zeros_like()
+    if debug:
+        oof_sig = np.zeros([n_classes*n_fold, n_classes])
+    else:
+        oof_sig = np.zeros([len(trn_tp), n_classes])
     for i_fold in progress_bar(range(n_fold)):
         logger.info("-" * 30)
         logger.info(f'\tFold {i_fold + 1}/{n_fold}')
@@ -44,8 +49,12 @@ def train_cv(config):
                                        path=save_path)
         for epoch in progress_bar(range(1, n_epoch+1)):
             # 学習を行う
-            model, loss_trn, loss_val, acc_val, output_sig = train_fold(
-                                                i_fold, trn_tp, config)
+            result_dict = train_fold(i_fold, trn_tp, config)
+            val_idxs = result_dict['val_idxs']
+            output_sig = result_dict['output_sig']
+            loss_trn = result_dict['loss_trn']
+            loss_val = result_dict['loss_val']
+            acc_val = result_dict['acc_val']
             logger.info(f'[fold({i_fold+1})epoch({epoch})]'
                         f'loss_trn={loss_trn:.6f} '
                         f'loss_val={loss_val:.6f} '
@@ -56,9 +65,13 @@ def train_cv(config):
             losses_trn.append(loss_trn)
             losses_val.append(loss_val)
             accs_val.append(acc_val)
+            if debug:
+                oof_sig[i_fold*n_classes:(i_fold+1)*n_classes] = output_sig
+            else:
+                oof_sig[val_idxs, :] = output_sig
 
             # best model ?
-            is_update = early_stopping(loss_val, model, debug)
+            is_update = early_stopping(loss_val, result_dict['model'], debug)
             if is_update:
                 best_loss_val = loss_val
                 best_acc_val = acc_val
@@ -109,10 +122,19 @@ def train_fold(i_fold, trn_tp, config):
     del data
 
     # eval valid
-    loss_val, score_val, output_sig = get_loss_score(model, val_loader,
-                                                     criterion, device)
+    loss_val, acc_val, output_sig = get_loss_score(model, val_loader,
+                                                   criterion, device)
 
-    return model, loss_trn, loss_val, score_val, output_sig
+    result_dict = {
+            'model': model,
+            'val_idxs': val_idxs,
+            'output_sig': output_sig,
+            'loss_trn': loss_trn,
+            'loss_val': loss_val,
+            'acc_val': acc_val,
+            }
+    # return model, loss_trn, loss_val, acc_val, output_sig
+    return result_dict
 
 
 def get_loss_score(model, val_loader, criterion, device):
@@ -120,13 +142,13 @@ def get_loss_score(model, val_loader, criterion, device):
     epoch_valid_loss = 0
     y_pred_list = []
     y_true_list = []
+    output_sig_list = []
     for batch_idx, (data, target) in enumerate(val_loader):
         data, target = data.to(device), target.to(device)
         output = model(data)
         loss = criterion(output, target)
         epoch_valid_loss += loss.item()*data.size(0)
 
-#         out_numpy = output.detach().cpu().numpy()
         output_ = output['output']
         output_sig = output['output_sigmoid']
         output_sig = output_sig.detach().cpu().numpy()
@@ -134,10 +156,12 @@ def get_loss_score(model, val_loader, criterion, device):
         _y_true = target.detach().cpu().numpy().argmax(axis=1)
         y_pred_list.append(_y_pred)
         y_true_list.append(_y_true)
+        output_sig_list.append(output_sig)
 
     loss_val = epoch_valid_loss / len(val_loader.dataset)
     y_pred = np.concatenate(y_pred_list, axis=0)
     y_true = np.concatenate(y_true_list, axis=0)
+    output_sig = np.concatenate(output_sig_list, axis=0)
     acc_val = accuracy_score(y_true, y_pred)
     del data
     return loss_val, acc_val, output_sig
