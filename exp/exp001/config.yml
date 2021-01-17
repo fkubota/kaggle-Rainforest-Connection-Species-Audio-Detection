@@ -2,7 +2,8 @@ globals:
   seed: 5713
   debug: True
   mixup: False
-  num_epochs: 45
+  # num_epochs: 45
+  num_epochs: 2
 
 path:
   dir_train: '../../data_ignore/input/train/'
@@ -26,8 +27,8 @@ dataset:
 
 loader:
   train:
-    batch_size: 10
-    # batch_size: 1
+    # batch_size: 20
+    batch_size: 3
     shuffle: True
     num_workers: 2
     # num_workers: 0
@@ -39,6 +40,7 @@ loader:
 split:
   seed: 5713
   n_fold: 5
+  # n_fold: 2
  
 loss:
   name: ResNetLoss
