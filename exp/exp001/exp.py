@@ -58,7 +58,8 @@ def main():
         # 学習を行う
         logger.info(f'fold {i_fold + 1}/{n_fold} - start training')
 
-        _ = trainner.train_fold(i_fold, trn_tp, config)
+        model, loss_trn, loss_val, score_val = trainner.train_fold(
+                                                i_fold, trn_tp, config)
 
 
 if __name__ == "__main__":
