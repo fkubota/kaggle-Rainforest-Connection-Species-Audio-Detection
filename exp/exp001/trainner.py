@@ -7,9 +7,10 @@ import numpy as np
 import torch
 from sklearn.metrics import accuracy_score
 
-import configuration as C
-from criterion import mixup_criterion
 import utils as U
+import configuration as C
+import result_handler as rh
+from criterion import mixup_criterion
 from early_stopping import EarlyStopping
 
 
@@ -21,12 +22,13 @@ def train_cv(config):
     path_trn_tp = config['path']['path_train_tp']
     n_classes = config['model']['params']['n_classes']
     _model = C.get_model(config)
-    _, dir_save_ignore_exp, _ = U.get_save_dir_exp(config)
+    dir_save_exp, dir_save_ignore_exp, _ = U.get_save_dir_exp(config)
 
     # load data
     trn_tp = pd.read_csv(path_trn_tp)
 
-    # oof_sig = np.zeros_like()
+    # init
+    acc_val_folds = []
     if debug:
         oof_sig = np.zeros([n_classes*n_fold, n_classes])
     else:
@@ -42,6 +44,7 @@ def train_cv(config):
         accs_val = []
         best_acc_val = 0
         best_loss_val = 0
+        best_output_sig = 0
         save_path = f'{dir_save_ignore_exp}/'\
                     f'{_model.__class__.__name__}_fold{i_fold}.pth'
         early_stopping = EarlyStopping(patience=12,
@@ -65,22 +68,48 @@ def train_cv(config):
             losses_trn.append(loss_trn)
             losses_val.append(loss_val)
             accs_val.append(acc_val)
-            if debug:
-                oof_sig[i_fold*n_classes:(i_fold+1)*n_classes] = output_sig
-            else:
-                oof_sig[val_idxs, :] = output_sig
 
             # best model ?
             is_update = early_stopping(loss_val, result_dict['model'], debug)
             if is_update:
                 best_loss_val = loss_val
                 best_acc_val = acc_val
+                best_output_sig = output_sig
 
             if early_stopping.early_stop:
                 logger.info("Early stopping")
                 break
+            # result
+            rh.save_loss_figure(i_fold, epochs, losses_trn,
+                                losses_val, dir_save_exp)
+            rh.save_result_csv(i_fold, best_loss_val,
+                               best_acc_val, dir_save_exp, config)
+
+        # --- fold end ---
+        # oof_sig
+        acc_val_folds.append(best_acc_val)
+        if debug:
+            oof_sig[i_fold*n_classes:(i_fold+1)*n_classes] = best_output_sig
+        else:
+            oof_sig[val_idxs, :] = best_output_sig
         logger.info(f'best_loss_val: {best_loss_val:.6f}, '
                     f'best_acc_val: {best_acc_val:.6f}')
+
+    oof = np.argmax(oof_sig, axis=0)
+    if debug:
+        # 適当な値を答えとする
+        acc_oof = accuracy_score(np.zeros(len(oof)), oof)
+        st()
+    else:
+        acc_oof = accuracy_score(trn_tp['species_id'].values, oof)
+
+    # acc_val_folds
+    acc_val_folds_mean = np.mean(acc_val_folds)
+    acc_val_folds_std = np.std(acc_val_folds)
+    logger.info(f'acc_folds(mean, std): '
+                f'{acc_val_folds_mean:.6f} +- {acc_val_folds_std:6f}')
+    logger.info(f'acc_oof: {acc_oof:6f}')
+
 
 
 def train_fold(i_fold, trn_tp, config):
