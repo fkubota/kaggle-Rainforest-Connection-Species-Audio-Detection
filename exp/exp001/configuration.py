@@ -1,5 +1,5 @@
 from ipdb import set_trace as st
-import utils
+import utils as U
 import datasets
 import criterion
 import model_list
@@ -53,7 +53,7 @@ def get_index_fold(trn_tp, i_fold, config):
         ))[i_fold]
 
     if debug:
-        trn_idxs, val_idxs = utils.get_debug_idx(
+        trn_idxs, val_idxs = U.get_debug_idx(
                 trn_tp, trn_idxs, val_idxs, config)
 
     return trn_idxs, val_idxs
@@ -79,7 +79,6 @@ def get_criterion(config):
 
 
 def get_model(config):
-    logger.info(':: in ::')
     model_config = config["model"]
     model_name = model_config["name"]
     model_params = model_config["params"]
@@ -87,7 +86,6 @@ def get_model(config):
     model = model_list.__getattribute__(model_name)(model_params)
 
     # model = eval(model_name)(model_params)
-    logger.info(':: out ::')
     return model
 
 

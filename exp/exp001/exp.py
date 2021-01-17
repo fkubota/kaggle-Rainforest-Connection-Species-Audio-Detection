@@ -1,4 +1,5 @@
 from ipdb import set_trace as st
+import utils as U
 import configuration as C
 import trainner
 import os
@@ -44,6 +45,7 @@ def main():
         config = yaml.safe_load(yml)
 
     # init
+    config = U.set_debug_config(config)
     dir_save, dir_save_ignore = init_exp(config)
     rh.save_model_architecture(dir_save, C.get_model(config))
 
@@ -58,9 +60,11 @@ def main():
         # 学習を行う
         logger.info(f'fold {i_fold + 1}/{n_fold} - start training')
 
-        model, loss_trn, loss_val, score_val = trainner.train_fold(
+        model, loss_trn, loss_val, accuracy_val = trainner.train_fold(
                                                 i_fold, trn_tp, config)
+        logger.info(f'[fold {i_fold+1}]accuracy_val={accuracy_val:.4f}')
 
+    logger.info('::: exp end :::')
 
 if __name__ == "__main__":
     main()

@@ -49,3 +49,12 @@ def get_debug_idx(trn_tp, trn_idxs, val_idxs, config):
         val_idxs_debug.append(trn_tp_val[bools]['idx_'].values[0])
 
     return trn_idxs_debug, val_idxs_debug
+
+
+def set_debug_config(config):
+    if config['globals']['debug']:
+        config['num_epochs'] = 2
+        config['split']['n_fold'] = 2
+        return config
+    else:
+        return config

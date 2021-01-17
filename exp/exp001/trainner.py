@@ -6,6 +6,7 @@ from utils import mixup_data
 
 import numpy as np
 import torch
+from sklearn.metrics import accuracy_score
 
 
 def train_fold(i_fold, trn_tp, config):
@@ -28,7 +29,6 @@ def train_fold(i_fold, trn_tp, config):
     model.train()
     epoch_train_loss = 0
     for batch_idx, (data, target) in enumerate(trn_loader):
-        logger.info(f'{batch_idx + 1}/{len(trn_loader)}')
         data, target = data.to(device), target.to(device)
         if mixup:
             data, targets_a, targets_b, lam = mixup_data(data,
@@ -77,8 +77,7 @@ def get_loss_score(model, val_loader, criterion, device):
     loss_val = epoch_valid_loss / len(val_loader.dataset)
     y_pred = np.concatenate(y_pred_list, axis=0)
     y_true = np.concatenate(y_true_list, axis=0)
-    # f_score = f1_score(y_true, y_pred, average='macro')
-    score = 0
+    accuracy_val = accuracy_score(y_true, y_pred)
     del data
     logger.info(':: out ::')
-    return loss_val, score
+    return loss_val, accuracy_val
