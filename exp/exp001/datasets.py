@@ -98,7 +98,7 @@ class SpectrogramDataset(data.Dataset):
         #         # melspec, sr=sr, x_axis='time', y_axis='mel')
         #         melspec, sr=sr, x_axis='time', y_axis='mel')
         # import matplotlib.pyplot as plt
-        plt.title(f'{rec} [{t_min}~{t_max}],[{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
+        # plt.title(f'{rec} [{t_min}~{t_max}],[{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
         # plt.show()
         # -----
 
