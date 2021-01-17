@@ -17,7 +17,7 @@ def get_trn_val_loader(df, phase, config):
     name = dataset_config['name']
     # params = dataset_config['params']
     loader_config = config["loader"][phase]
-    dir_data = config['globals']['dir_train']
+    dir_data = config['path']['dir_train']
 
     dataset = datasets.__getattribute__(name)(
             df,

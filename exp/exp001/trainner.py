@@ -6,13 +6,8 @@ from utils import mixup_data
 import torch
 
 
-# def train_fold(self, i_fold: int) -> Tuple[
-        # Model, np.array, np.array, float]:
-
 def train_fold(i_fold, trn_tp, config):
     logger.info(':: in ::')
-        # model, device, train_loader, optimizer,
-        # scheduler, loss_func, mixup=False):
     mixup = config['globals']['mixup']
     # device = config['globals']['device']
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

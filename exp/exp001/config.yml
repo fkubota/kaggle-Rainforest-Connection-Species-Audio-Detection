@@ -2,6 +2,9 @@ globals:
   seed: 5713
   debug: True
   mixup: False
+  num_epochs: 45
+
+path:
   dir_train: '../../data_ignore/input/train/'
   dir_test: '../../data_ignore/input/test/'
   path_train_tp: '../../data_ignore/input/train_tp.csv'

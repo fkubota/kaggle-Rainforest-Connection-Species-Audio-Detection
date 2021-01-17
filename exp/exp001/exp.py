@@ -23,8 +23,8 @@ def init_exp(config):
     _dir = os.path.dirname(os.path.abspath(__file__))
     exp_name = _dir.split('/')[-1]
     logger.info(f'exp_name: {exp_name}')
-    dir_save = f'{config["globals"]["dir_save"]}{exp_name}'
-    dir_save_ignore = f'{config["globals"]["dir_save_ignore"]}{exp_name}'
+    dir_save = f'{config["path"]["dir_save"]}{exp_name}'
+    dir_save_ignore = f'{config["path"]["dir_save_ignore"]}{exp_name}'
     if not os.path.exists(dir_save):
         os.makedirs(dir_save)
     if not os.path.exists(dir_save_ignore):
@@ -49,7 +49,7 @@ def main():
 
     # config
     n_fold = config['split']['n_fold']
-    path_trn_tp = config['globals']['path_train_tp']
+    path_trn_tp = config['path']['path_train_tp']
 
     # load data
     trn_tp = pd.read_csv(path_trn_tp)
@@ -59,6 +59,7 @@ def main():
         logger.info(f'fold {i_fold + 1}/{n_fold} - start training')
 
         _ = trainner.train_fold(i_fold, trn_tp, config)
+
 
 if __name__ == "__main__":
     main()
