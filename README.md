@@ -156,3 +156,6 @@ hoge
 	- train_fold部分の作成
 	- resnet18の実装
 	- debugモードの追加
+
+### 20200117
+- exp001
