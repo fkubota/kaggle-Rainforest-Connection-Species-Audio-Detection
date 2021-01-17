@@ -97,7 +97,7 @@ def train_cv(config):
         logger.info(f'best_loss_val: {best_loss_val:.6f}, '
                     f'best_acc_val: {best_acc_val:.6f}')
 
-    oof = np.argmax(oof_sig, axis=0)
+    oof = np.argmax(oof_sig, axis=1)
     if debug:
         # 適当な値を答えとする
         acc_oof = accuracy_score(np.zeros(len(oof)), oof)
