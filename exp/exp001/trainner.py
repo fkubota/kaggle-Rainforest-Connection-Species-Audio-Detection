@@ -1,5 +1,6 @@
 from ipdb import set_trace as st
 from icecream import ic
+import gc
 import pandas as pd
 from fastprogress import progress_bar
 from loguru import logger
@@ -34,9 +35,9 @@ def train_cv(config):
     else:
         oof_sig = np.zeros([len(trn_tp), n_classes])
     for i_fold in progress_bar(range(n_fold)):
-        logger.info("-" * 30)
+        logger.info("-" * 18)
         logger.info(f'\tFold {i_fold + 1}/{n_fold}')
-        logger.info("-" * 30)
+        logger.info("-" * 18)
 
         epochs = []
         losses_trn = []
@@ -49,7 +50,8 @@ def train_cv(config):
                     f'{_model.__class__.__name__}_fold{i_fold}.pth'
         early_stopping = EarlyStopping(patience=12,
                                        verbose=True,
-                                       path=save_path)
+                                       path=save_path,
+                                       trace_func=logger.info)
         for epoch in range(1, n_epoch+1):
             # 学習を行う
             result_dict = train_fold(i_fold, trn_tp, config)
@@ -99,7 +101,6 @@ def train_cv(config):
     if debug:
         # 適当な値を答えとする
         acc_oof = accuracy_score(np.zeros(len(oof)), oof)
-        st()
     else:
         acc_oof = accuracy_score(trn_tp['species_id'].values, oof)
 
@@ -109,7 +110,6 @@ def train_cv(config):
     logger.info(f'acc_folds(mean, std): '
                 f'{acc_val_folds_mean:.6f} +- {acc_val_folds_std:6f}')
     logger.info(f'acc_oof: {acc_oof:6f}')
-
 
 
 def train_fold(i_fold, trn_tp, config):
@@ -163,6 +163,14 @@ def train_fold(i_fold, trn_tp, config):
             'acc_val': acc_val,
             }
     # return model, loss_trn, loss_val, acc_val, output_sig
+    # 開放
+    del trn_loader
+    del val_loader
+    del model
+    del optimizer
+    del scheduler
+    gc.collect()
+    torch.cuda.empty_cache()
     return result_dict
 
 
