@@ -1,10 +1,11 @@
+from icecream import ic
+from ipdb import set_trace as st
 from loguru import logger
 import cv2
 import librosa
 import librosa.display
 import numpy as np
 import soundfile as sf
-from ipdb import set_trace as st
 import torch.utils.data as data
 
 
@@ -40,12 +41,12 @@ def mono_to_color(X: np.ndarray,
 
 class SpectrogramDataset(data.Dataset):
     def __init__(self,
-                 df,
+                 df_trn_tp,
                  dir_data,
                  phase,
                  config):
-        self.df = df
-        self.unique_rec = df['recording_id'].unique()
+        self.df_trn_tp = df_trn_tp
+        self.unique_rec = df_trn_tp['recording_id'].unique()
         self.dir_data = dir_data
         self.img_size = config['params']['img_size']
         self.period = config['params']['period']
@@ -54,21 +55,14 @@ class SpectrogramDataset(data.Dataset):
         # self.melspectrogram_parameters = config['melspectrogram_parameters']
 
     def __len__(self):
-        return len(self.unique_rec)
+        return len(self.df_trn_tp)
 
     def __getitem__(self, idx):
-        rec = self.unique_rec[idx]
+        series = self.df_trn_tp.iloc[idx, :]
+        rec = series['recording_id']
         path_flac = f'{self.dir_data}{rec}.flac'
-        df_rec = self.df.query('recording_id == @rec')
-        n_label = len(df_rec)
-        # logger.info(f'{idx}, {rec}')
-
-        # どの labelを使うか選ぶ
-        idx_choice = np.random.randint(n_label)
-
-        species_id = df_rec["species_id"].values[idx_choice]
-        t_min = df_rec['t_min'].values[idx_choice]
-        # t_center = t_min + (t_max - t_min)/2
+        species_id = series["species_id"]
+        t_min = series['t_min']
 
         # load
         y, sr = sf.read(path_flac)
@@ -88,7 +82,6 @@ class SpectrogramDataset(data.Dataset):
             # start が右端に行き過ぎてeffective_length以下になってしまった時の処理
             start = int((len(y)/sr - self.period) * sr)
 
-
         # spectrogramの計算
         y_crop = y[start:start+effective_length].astype(np.float32)
 
@@ -105,7 +98,7 @@ class SpectrogramDataset(data.Dataset):
         #         # melspec, sr=sr, x_axis='time', y_axis='mel')
         #         melspec, sr=sr, x_axis='time', y_axis='mel')
         # import matplotlib.pyplot as plt
-        # plt.title(f'{rec} [{t_min}~{t_max}], [{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
+        plt.title(f'{rec} [{t_min}~{t_max}],[{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
         # plt.show()
         # -----
 
@@ -120,7 +113,7 @@ class SpectrogramDataset(data.Dataset):
         image = (image / 255.0).astype(np.float32)
 
         # ラベルの作成
-        labels = np.zeros(self.df.species_id.nunique(), dtype=int)
+        labels = np.zeros(self.df_trn_tp.species_id.nunique(), dtype=int)
         labels[species_id] = 1
         # logger.info(f't_left: {t_left}')
         # logger.info(f'len(y_crop): {len(y_crop)}')

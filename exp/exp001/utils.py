@@ -16,6 +16,15 @@ def set_seed(seed: int = 42):
     torch.backends.cudnn.benchmark = True  # type: ignore
 
 
+def get_save_dir_exp(config):
+    _dir = os.path.dirname(os.path.abspath(__file__))
+    exp_name = _dir.split('/')[-1]
+    logger.info(f'exp_name: {exp_name}')
+    dir_save_exp = f'{config["path"]["dir_save"]}{exp_name}'
+    dir_save_ignore_exp = f'{config["path"]["dir_save_ignore"]}{exp_name}'
+    return dir_save_exp, dir_save_ignore_exp, exp_name
+
+
 def mixup_data(x, y, alpha=1.0, use_cuda=True):
     '''Returns mixed inputs, pairs of targets, and lambda'''
     if alpha > 0:
