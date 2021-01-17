@@ -66,6 +66,7 @@ def set_debug_config(config):
         logger.info(':: debug mode ::')
         config['globals']['num_epochs'] = 2
         config['split']['n_fold'] = 2
+        config['loader']['batch_size'] = 3
         return config
     else:
         return config
