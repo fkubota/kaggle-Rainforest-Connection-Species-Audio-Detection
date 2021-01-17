@@ -24,12 +24,24 @@ def train_cv(config):
         logger.info("-" * 30)
         logger.info(f'\tFold {i_fold + 1}/{n_fold}')
         logger.info("-" * 30)
+
+        epochs = []
+        losses_trn = []
+        losses_val = []
+        accs_val = []
         for epoch in progress_bar(range(1, n_epoch+1)):
             # 学習を行う
-            model, loss_trn, loss_val, accuracy_val = train_fold(
+            model, loss_trn, loss_val, acc_val = train_fold(
                                                     i_fold, trn_tp, config)
             logger.info(f'[fold({i_fold+1})epoch({epoch})]'
-                        f'accuracy_val={accuracy_val:.4f}')
+                        f'loss_trn={loss_trn:.4f} '
+                        f'loss_val={loss_val:.4f} '
+                        f'acc_val={acc_val:.4f}')
+
+            epochs.append(epoch)
+            losses_trn.append(loss_trn)
+            losses_val.append(loss_val)
+            accs_val.append(acc_val)
 
 
 def train_fold(i_fold, trn_tp, config):
