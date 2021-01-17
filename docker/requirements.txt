@@ -1,5 +1,6 @@
 ipdb==0.13.4
 loguru==0.5.3
+fastprogress==1.0.0
 matplotlib==3.3.3
 soundfile==0.10.3.post1
 numpy==1.19.5
