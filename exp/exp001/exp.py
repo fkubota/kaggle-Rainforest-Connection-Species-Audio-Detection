@@ -1,11 +1,13 @@
 from ipdb import set_trace as st
 import utils as U
-import configuration as C
 import trainner
-import os
-import yaml
+import configuration as C
 import result_handler as rh
+import os
+import time
+import yaml
 import subprocess
+from fastprogress import progress_bar
 import pandas as pd
 from loguru import logger
 
@@ -36,6 +38,7 @@ def init_exp(config):
 
 
 def main():
+    start = time.time()
     logger.remove()
     logger.add('exp.log', mode='w')
     logger.info('='*20)
@@ -49,22 +52,14 @@ def main():
     dir_save, dir_save_ignore = init_exp(config)
     rh.save_model_architecture(dir_save, C.get_model(config))
 
-    # config
-    n_fold = config['split']['n_fold']
-    path_trn_tp = config['path']['path_train_tp']
+    # train
+    trainner.train_cv(config)
 
-    # load data
-    trn_tp = pd.read_csv(path_trn_tp)
-
-    for i_fold in range(n_fold):
-        # 学習を行う
-        logger.info(f'fold {i_fold + 1}/{n_fold} - start training')
-
-        model, loss_trn, loss_val, accuracy_val = trainner.train_fold(
-                                                i_fold, trn_tp, config)
-        logger.info(f'[fold {i_fold+1}]accuracy_val={accuracy_val:.4f}')
-
+    end = time.time()
+    time_all = end - start
+    logger.info(f'elapsed time: {U.sec2time(time_all)}')
     logger.info('::: exp end :::')
+
 
 if __name__ == "__main__":
     main()

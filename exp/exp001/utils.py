@@ -1,8 +1,9 @@
 import os
-import torch
+import time
 import random
 import numpy as np
 from loguru import logger
+import torch
 
 
 def set_seed(seed: int = 42):
@@ -53,8 +54,22 @@ def get_debug_idx(trn_tp, trn_idxs, val_idxs, config):
 
 def set_debug_config(config):
     if config['globals']['debug']:
-        config['num_epochs'] = 2
+        logger.info(':: debug mode ::')
+        config['globals']['num_epochs'] = 2
         config['split']['n_fold'] = 2
         return config
     else:
         return config
+
+
+def sec2time(sec):
+    hour = int(sec//3600)
+    minute = int((sec - 3600*hour)//60)
+    second = int(sec - 3600*hour - 60*minute)
+
+    hour = str(hour).zfill(2)
+    minute = str(minute).zfill(2)
+    second = str(second).zfill(2)
+    str_time = f'{hour}:{minute}:{second}'
+
+    return str_time

@@ -1,4 +1,6 @@
 from ipdb import set_trace as st
+import pandas as pd
+from fastprogress import progress_bar
 from loguru import logger
 import configuration as C
 from criterion import mixup_criterion
@@ -9,8 +11,28 @@ import torch
 from sklearn.metrics import accuracy_score
 
 
+def train_cv(config):
+    # config
+    n_fold = config['split']['n_fold']
+    n_epoch = config['globals']['num_epochs']
+    path_trn_tp = config['path']['path_train_tp']
+
+    # load data
+    trn_tp = pd.read_csv(path_trn_tp)
+
+    for i_fold in progress_bar(range(n_fold)):
+        logger.info("-" * 30)
+        logger.info(f'\tFold {i_fold + 1}/{n_fold}')
+        logger.info("-" * 30)
+        for epoch in progress_bar(range(1, n_epoch+1)):
+            # 学習を行う
+            model, loss_trn, loss_val, accuracy_val = train_fold(
+                                                    i_fold, trn_tp, config)
+            logger.info(f'[fold({i_fold+1})epoch({epoch})]'
+                        f'accuracy_val={accuracy_val:.4f}')
+
+
 def train_fold(i_fold, trn_tp, config):
-    logger.info(':: in ::')
     mixup = config['globals']['mixup']
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
@@ -51,12 +73,10 @@ def train_fold(i_fold, trn_tp, config):
     # eval valid
     loss_val, score_val = get_loss_score(model, val_loader, criterion, device)
 
-    logger.info(':: out ::')
     return model, loss_trn, loss_val, score_val
 
 
 def get_loss_score(model, val_loader, criterion, device):
-    logger.info(':: in ::')
     model.eval()
     epoch_valid_loss = 0
     y_pred_list = []
@@ -79,5 +99,4 @@ def get_loss_score(model, val_loader, criterion, device):
     y_true = np.concatenate(y_true_list, axis=0)
     accuracy_val = accuracy_score(y_true, y_pred)
     del data
-    logger.info(':: out ::')
     return loss_val, accuracy_val
