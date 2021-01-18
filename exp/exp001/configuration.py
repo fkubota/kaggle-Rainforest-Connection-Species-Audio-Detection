@@ -47,7 +47,7 @@ def get_index_fold(trn_tp, i_fold, config):
     n_classes = config['model']['params']['n_classes']
 
     recording_ids = trn_tp['recording_id'].values
-    speceis_ids = trn_tp['speceis_id'].values
+    species_id = trn_tp['species_id'].values
 
     dummy_x = np.zeros(len(recording_ids))
     dummy_x_shf, recording_ids_shf = shuffle(
@@ -61,9 +61,9 @@ def get_index_fold(trn_tp, i_fold, config):
     if debug:
         trn_idxs, val_idxs = U.get_debug_idx(
                 trn_tp, trn_idxs, val_idxs, config)
-    assert np.unique(speceis_ids[trn_idxs]).size == n_classes, \
+    assert np.unique(species_id[trn_idxs]).size == n_classes, \
         'n_classesが一致しません'
-    assert np.unique(speceis_ids[val_idxs]).size == n_classes, \
+    assert np.unique(species_id[val_idxs]).size == n_classes, \
         'n_classesが一致しません'
     return trn_idxs, val_idxs
 
