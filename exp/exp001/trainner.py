@@ -111,6 +111,10 @@ def train_cv(config):
                 f'{acc_val_folds_mean:.6f} +- {acc_val_folds_std:6f}')
     logger.info(f'acc_oof: {acc_oof:6f}')
 
+    del result_dict
+    gc.collect()
+    torch.cuda.empty_cache()
+
 
 def train_fold(i_fold, trn_tp, config):
     mixup = config['globals']['mixup']
@@ -164,13 +168,13 @@ def train_fold(i_fold, trn_tp, config):
             }
     # return model, loss_trn, loss_val, acc_val, output_sig
     # 開放
-    del trn_loader
-    del val_loader
-    del model
-    del optimizer
-    del scheduler
-    gc.collect()
-    torch.cuda.empty_cache()
+    # del trn_loader
+    # del val_loader
+    # del model
+    # del optimizer
+    # del scheduler
+    # gc.collect()
+    # torch.cuda.empty_cache()
     return result_dict
 
 

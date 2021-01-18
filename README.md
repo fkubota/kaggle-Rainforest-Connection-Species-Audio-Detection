@@ -174,4 +174,6 @@ hoge
 			- 入ってた
 		- [x] LRを0.001から0.01にしてみた。
 			- かわらず
-		- [ ] CVの切り方とか？
+		- [x] get_index_foldでrecording_ids_shf が使われてなかったミスを治した
+			- 結局収束せず
+		- [ ] trainner内のdelをコメントアウトしてみた
