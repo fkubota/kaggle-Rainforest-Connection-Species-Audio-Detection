@@ -48,14 +48,14 @@ loss:
     loss_type: bcew
 
 model:
-  name: ResNet50
+  name: ResNet18
   params:
     pretrained: True
     n_classes: 24
 
 optimizer:
-  # name: Adam
-  name: SGD
+  name: Adam
+  # name: SGD
   params:
     lr: 0.001
     momentum: 0.9
