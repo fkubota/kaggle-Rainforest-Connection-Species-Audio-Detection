@@ -2,7 +2,7 @@ globals:
   seed: 5713
   debug: True
   mixup: False
-  num_epochs: 20
+  num_epochs: 40
   # num_epochs: 2
 
 path:
@@ -57,7 +57,7 @@ optimizer:
   # name: Adam
   name: SGD
   params:
-    lr: 0.001
+    lr: 0.05
     momentum: 0.9
 
 scheduler:
