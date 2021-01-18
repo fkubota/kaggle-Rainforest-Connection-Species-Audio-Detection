@@ -183,3 +183,5 @@ hoge
 			- こいつが犯人だったぁぁぁぁああああ！
 
 ### 20200119
+- exp001
+	- get_index_foldにn_classesをチェックするassertを入れた
