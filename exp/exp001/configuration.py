@@ -1,3 +1,4 @@
+from icecream import ic
 from ipdb import set_trace as st
 from loguru import logger
 import os
@@ -43,6 +44,7 @@ def get_index_fold(trn_tp, i_fold, config):
     n_fold = config_split['n_fold']
     seed = config_split['seed']
     debug = config['globals']['debug']
+    n_classes = config['model']['params']['n_classes']
 
     recording_ids = trn_tp['recording_id'].values
 
@@ -58,7 +60,10 @@ def get_index_fold(trn_tp, i_fold, config):
     if debug:
         trn_idxs, val_idxs = U.get_debug_idx(
                 trn_tp, trn_idxs, val_idxs, config)
-
+    assert np.unique(recording_ids[trn_idxs]).size == n_classes, \
+        'n_classesが一致しません'
+    assert np.unique(recording_ids[val_idxs]).size == n_classes, \
+        'n_classesが一致しません'
     return trn_idxs, val_idxs
 
 
