@@ -39,6 +39,7 @@ def init_exp(config):
 
 
 def main():
+    # start
     start = time.time()
     logger.remove()
     logger.add('exp.log', mode='w')
@@ -56,6 +57,7 @@ def main():
     # train
     trainner.train_cv(config)
 
+    # end
     end = time.time()
     time_all = end - start
     logger.info(f'elapsed time: {U.sec2time(time_all)}')

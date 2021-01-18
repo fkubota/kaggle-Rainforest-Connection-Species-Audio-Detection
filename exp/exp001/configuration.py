@@ -1,4 +1,5 @@
 from ipdb import set_trace as st
+from loguru import logger
 import utils as U
 import datasets
 import criterion
@@ -6,7 +7,6 @@ import model_list
 import numpy as np
 from torch import nn
 import torch.optim as optim
-from loguru import logger
 import torch.utils.data as data
 from sklearn.utils import shuffle
 from sklearn.model_selection import GroupKFold
@@ -25,7 +25,7 @@ def get_trn_val_loader(df, phase, config):
             phase=phase,
             config=dataset_config)
     # 動作確認
-    dataset.__getitem__(3)  # single label
+    # dataset.__getitem__(3)  # single label
     # dataset.__getitem__(14)   # multi labels
 
     loader = data.DataLoader(dataset, **loader_config)
@@ -43,13 +43,14 @@ def get_index_fold(trn_tp, i_fold, config):
     debug = config['globals']['debug']
 
     recording_ids = trn_tp['recording_id'].values
+
     dummy_x = np.zeros(len(recording_ids))
     dummy_x_shf, recording_ids_shf = shuffle(
             dummy_x, recording_ids, random_state=seed)
-    splitter = GroupKFold(n_splits=n_fold)
 
+    splitter = GroupKFold(n_splits=n_fold)
     trn_idxs, val_idxs = list(splitter.split(
-        X=dummy_x, groups=recording_ids
+        X=dummy_x_shf, groups=recording_ids_shf
         ))[i_fold]
 
     if debug:

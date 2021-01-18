@@ -46,7 +46,7 @@ class SpectrogramDataset(data.Dataset):
                  phase,
                  config):
         self.df_trn_tp = df_trn_tp
-        self.unique_rec = df_trn_tp['recording_id'].unique()
+        # self.unique_rec = df_trn_tp['recording_id'].unique()
         self.dir_data = dir_data
         self.img_size = config['params']['img_size']
         self.period = config['params']['period']
