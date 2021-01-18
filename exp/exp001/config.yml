@@ -45,7 +45,7 @@ split:
 loss:
   name: ResNetLoss
   params:
-    loss_type: bce
+    loss_type: bcew
 
 model:
   name: ResNet18

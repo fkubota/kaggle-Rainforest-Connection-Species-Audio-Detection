@@ -25,7 +25,7 @@ def get_trn_val_loader(df, phase, config):
             phase=phase,
             config=dataset_config)
     # 動作確認
-    # dataset.__getitem__(2)  # single label
+    dataset.__getitem__(3)  # single label
     # dataset.__getitem__(14)   # multi labels
 
     loader = data.DataLoader(dataset, **loader_config)

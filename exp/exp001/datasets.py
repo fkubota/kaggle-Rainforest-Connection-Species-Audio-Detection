@@ -52,7 +52,6 @@ class SpectrogramDataset(data.Dataset):
         self.period = config['params']['period']
         self.shift_duration = config['params']['shift_duration']
         self.melspec_params = config['melspec_params']
-        # self.melspectrogram_parameters = config['melspectrogram_parameters']
 
     def __len__(self):
         return len(self.df_trn_tp)
@@ -93,12 +92,13 @@ class SpectrogramDataset(data.Dataset):
         melspec = librosa.power_to_db(melspec).astype(np.float32)
 
         # ----- 可視化 -----
-        # t_max = df_rec['t_max'].values[idx_choice]
+        # t_max = series['t_max']
         # librosa.display.specshow(
         #         # melspec, sr=sr, x_axis='time', y_axis='mel')
         #         melspec, sr=sr, x_axis='time', y_axis='mel')
         # import matplotlib.pyplot as plt
-        # plt.title(f'{rec} [{t_min}~{t_max}],[{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
+        # plt.title(f'{rec} [{t_min}~{t_max}],'
+        #           f'[{start/sr:.1f}~{(start+effective_length)/sr:.1f}]')
         # plt.show()
         # -----
 

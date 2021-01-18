@@ -10,6 +10,8 @@ class ResNetLoss(nn.Module):
             self.loss = nn.CrossEntropyLoss()
         elif loss_type == "bce":
             self.loss = nn.BCELoss()
+        elif loss_type == "bcew":
+            self.loss = nn.BCEWithLogitsLoss()
 
     def forward(self, input_, target):
         if self.loss_type == "ce":
@@ -17,6 +19,9 @@ class ResNetLoss(nn.Module):
             target = target.argmax(1).long()
         elif self.loss_type == "bce":
             input_ = input_["output_sigmoid"]
+            target = target.float()
+        elif self.loss_type == "bcew":
+            input_ = input_["output"]
             target = target.float()
 
         return self.loss(input_, target)
