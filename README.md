@@ -176,4 +176,6 @@ hoge
 			- かわらず
 		- [x] get_index_foldでrecording_ids_shf が使われてなかったミスを治した
 			- 結局収束せず
-		- [ ] trainner内のdelをコメントアウトしてみた
+		- [x] trainner内のdelをコメントアウトしてみた
+		- [x] periodを10秒にしてみた
+		- [x] resnet50で試してみた

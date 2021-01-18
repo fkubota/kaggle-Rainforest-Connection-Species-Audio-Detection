@@ -48,7 +48,7 @@ loss:
     loss_type: bcew
 
 model:
-  name: ResNet18
+  name: ResNet50
   params:
     pretrained: True
     n_classes: 24

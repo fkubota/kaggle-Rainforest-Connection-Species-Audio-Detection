@@ -18,11 +18,11 @@ from early_stopping import EarlyStopping
 def train_cv(config):
     # config
     debug = config['globals']['debug']
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     n_fold = config['split']['n_fold']
     n_epoch = config['globals']['num_epochs']
     path_trn_tp = config['path']['path_train_tp']
     n_classes = config['model']['params']['n_classes']
-    _model = C.get_model(config)
     dir_save_exp, dir_save_ignore_exp, _ = U.get_save_dir_exp(config)
 
     # load data
@@ -39,6 +39,13 @@ def train_cv(config):
         logger.info(f'\tFold {i_fold + 1}/{n_fold}')
         logger.info("-" * 18)
 
+        # C
+        model = C.get_model(config).to(device)
+        criterion = C.get_criterion(config)
+        optimizer = C.get_optimizer(model, config)
+        scheduler = C.get_scheduler(optimizer, config)
+
+        # init
         epochs = []
         losses_trn = []
         losses_val = []
@@ -47,14 +54,16 @@ def train_cv(config):
         best_loss_val = 0
         best_output_sig = 0
         save_path = f'{dir_save_ignore_exp}/'\
-                    f'{_model.__class__.__name__}_fold{i_fold}.pth'
+                    f'{model.__class__.__name__}_fold{i_fold}.pth'
         early_stopping = EarlyStopping(patience=12,
                                        verbose=True,
                                        path=save_path,
                                        trace_func=logger.info)
         for epoch in range(1, n_epoch+1):
             # 学習を行う
-            result_dict = train_fold(i_fold, trn_tp, config)
+            result_dict = train_fold(i_fold, trn_tp, model,
+                                     criterion, optimizer,
+                                     scheduler, config)
             val_idxs = result_dict['val_idxs']
             output_sig = result_dict['output_sig']
             loss_trn = result_dict['loss_trn']
@@ -116,7 +125,9 @@ def train_cv(config):
     torch.cuda.empty_cache()
 
 
-def train_fold(i_fold, trn_tp, config):
+def train_fold(i_fold, trn_tp, model,
+               criterion, optimizer,
+               scheduler, config):
     mixup = config['globals']['mixup']
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     trn_idxs, val_idxs = C.get_index_fold(trn_tp, i_fold, config)
@@ -124,12 +135,6 @@ def train_fold(i_fold, trn_tp, config):
     trn_tp_val = trn_tp.iloc[val_idxs].reset_index(drop=True)
     trn_loader = C.get_trn_val_loader(trn_tp_trn, 'train', config)
     val_loader = C.get_trn_val_loader(trn_tp_val, 'valid', config)
-
-    # C
-    model = C.get_model(config).to(device)
-    criterion = C.get_criterion(config)
-    optimizer = C.get_optimizer(model, config)
-    scheduler = C.get_scheduler(optimizer, config)
 
     # train
     model.train()
