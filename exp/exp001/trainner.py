@@ -45,7 +45,6 @@ def train_cv(config):
         optimizer = C.get_optimizer(model, config)
         scheduler = C.get_scheduler(optimizer, config)
 
-        # init
         epochs = []
         losses_trn = []
         losses_val = []
@@ -120,7 +119,11 @@ def train_cv(config):
                 f'{acc_val_folds_mean:.6f} +- {acc_val_folds_std:6f}')
     logger.info(f'acc_oof: {acc_oof:6f}')
 
+    # 開放
     del result_dict
+    del model
+    del optimizer
+    del scheduler
     gc.collect()
     torch.cuda.empty_cache()
 
@@ -171,15 +174,6 @@ def train_fold(i_fold, trn_tp, model,
             'loss_val': loss_val,
             'acc_val': acc_val,
             }
-    # return model, loss_trn, loss_val, acc_val, output_sig
-    # 開放
-    # del trn_loader
-    # del val_loader
-    # del model
-    # del optimizer
-    # del scheduler
-    # gc.collect()
-    # torch.cuda.empty_cache()
     return result_dict
 
 
