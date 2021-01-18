@@ -46,7 +46,8 @@ def main():
     logger.info('='*20)
     logger.info('::: exp start :::')
     logger.info('='*20)
-    with open('config.yml', 'r') as yml:
+    pwd = os.path.dirname(os.path.abspath(__file__))
+    with open(f'{pwd}/config.yml', 'r') as yml:
         config = yaml.safe_load(yml)
 
     # init

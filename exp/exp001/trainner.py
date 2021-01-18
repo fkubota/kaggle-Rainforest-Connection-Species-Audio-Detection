@@ -1,6 +1,7 @@
 from ipdb import set_trace as st
 from icecream import ic
 import gc
+import os
 import pandas as pd
 from fastprogress import progress_bar
 from loguru import logger
@@ -26,7 +27,8 @@ def train_cv(config):
     dir_save_exp, dir_save_ignore_exp, _ = U.get_save_dir_exp(config)
 
     # load data
-    trn_tp = pd.read_csv(path_trn_tp)
+    pwd = os.path.dirname(os.path.abspath(__file__))
+    trn_tp = pd.read_csv(f'{pwd}/{path_trn_tp}')
 
     # init
     acc_val_folds = []

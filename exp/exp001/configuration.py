@@ -1,23 +1,25 @@
 from ipdb import set_trace as st
 from loguru import logger
-import utils as U
-import datasets
-import criterion
-import model_list
+import os
 import numpy as np
 from torch import nn
 import torch.optim as optim
 import torch.utils.data as data
 from sklearn.utils import shuffle
 from sklearn.model_selection import GroupKFold
+import utils as U
+import datasets
+import criterion
+import model_list
 
 
 def get_trn_val_loader(df, phase, config):
+    pwd = os.path.dirname(os.path.abspath(__file__))
     dataset_config = config["dataset"]
     name = dataset_config['name']
     # params = dataset_config['params']
     loader_config = config["loader"][phase]
-    dir_data = config['path']['dir_train']
+    dir_data = f"{pwd}/{config['path']['dir_train']}"
 
     dataset = datasets.__getattribute__(name)(
             df,
