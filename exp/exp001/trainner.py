@@ -91,11 +91,11 @@ def train_cv(config):
             if early_stopping.early_stop:
                 logger.info("Early stopping")
                 break
-            # result
-            rh.save_loss_figure(i_fold, epochs, losses_trn,
-                                losses_val, dir_save_exp)
-            rh.save_result_csv(i_fold, best_loss_val,
-                               best_acc_val, dir_save_exp, config)
+        # result
+        rh.save_loss_figure(i_fold, epochs, losses_trn,
+                            losses_val, dir_save_exp)
+        rh.save_result_csv(i_fold, best_loss_val,
+                           best_acc_val, dir_save_exp, config)
 
         # --- fold end ---
         # oof_sig
