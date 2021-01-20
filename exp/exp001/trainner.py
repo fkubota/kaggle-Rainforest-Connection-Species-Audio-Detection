@@ -2,6 +2,7 @@ from ipdb import set_trace as st
 from icecream import ic
 import gc
 import os
+import wandb
 import pandas as pd
 from fastprogress import progress_bar
 from loguru import logger
@@ -16,7 +17,7 @@ from criterion import mixup_criterion
 from early_stopping import EarlyStopping
 
 
-def train_cv(config):
+def train_cv(config, wb_summary):
     # config
     debug = config['globals']['debug']
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -37,15 +38,22 @@ def train_cv(config):
     else:
         oof_sig = np.zeros([len(trn_tp), n_classes])
     for i_fold in progress_bar(range(n_fold)):
+        # logger
         logger.info("-" * 18)
         logger.info(f'\tFold {i_fold + 1}/{n_fold}')
         logger.info("-" * 18)
 
-        # C
+        # preparation
         model = C.get_model(config).to(device)
         criterion = C.get_criterion(config)
         optimizer = C.get_optimizer(model, config)
         scheduler = C.get_scheduler(optimizer, config)
+        _, _, exp_name = U.get_save_dir_exp(config)
+
+        # wandb
+        wb_fold = wandb.init(project='kaggle-rfcx',
+                             group=exp_name,
+                             name=f'fold{i_fold}')
 
         epochs = []
         losses_trn = []
@@ -74,6 +82,10 @@ def train_cv(config):
                         f'loss_trn={loss_trn:.6f} '
                         f'loss_val={loss_val:.6f} '
                         f'acc_val={acc_val:.6f}')
+            wb_fold.log({'epoch': epoch,
+                         'loss_trn': loss_trn,
+                         'loss_val': loss_val,
+                         'acc_val': acc_val})
 
             # 格納
             epochs.append(epoch)
@@ -87,6 +99,8 @@ def train_cv(config):
                 best_loss_val = loss_val
                 best_acc_val = acc_val
                 best_output_sig = output_sig
+                wb_fold.summary['loss_val'] = best_loss_val
+                wb_fold.summary['acc_val'] = best_acc_val
 
             if early_stopping.early_stop:
                 logger.info("Early stopping")
@@ -120,6 +134,11 @@ def train_cv(config):
     logger.info(f'acc_folds(mean, std): '
                 f'{acc_val_folds_mean:.6f} +- {acc_val_folds_std:6f}')
     logger.info(f'acc_oof: {acc_oof:6f}')
+
+    # wandb
+    wb_summary.log({'acc_val_folds_mean': acc_val_folds_mean,
+                    'acc_val_folds_std': acc_val_folds_std,
+                    'acc_oof': acc_oof})
 
     # 開放
     del result_dict

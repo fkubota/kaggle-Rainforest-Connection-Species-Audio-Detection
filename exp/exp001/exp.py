@@ -1,15 +1,15 @@
+from icecream import ic
 from ipdb import set_trace as st
+import os
+import time
+import yaml
+import wandb
+import subprocess
+from loguru import logger
 import utils as U
 import trainner
 import configuration as C
 import result_handler as rh
-import os
-import time
-import yaml
-import subprocess
-from fastprogress import progress_bar
-import pandas as pd
-from loguru import logger
 
 
 def init_exp(config):
@@ -31,11 +31,17 @@ def init_exp(config):
     if not os.path.exists(dir_save_ignore):
         os.makedirs(dir_save_ignore)
 
+    # wandb
+    wb_summary = wandb.init(project='kaggle-rfcx',
+                            group=exp_name,
+                            name='summary')
+    wb_summary.config.config = config
+
     # set_seed
     U.set_seed(config['globals']['seed'])
 
     logger.info(':: out ::')
-    return dir_save, dir_save_ignore
+    return dir_save, dir_save_ignore, wb_summary
 
 
 def main():
@@ -52,11 +58,11 @@ def main():
 
     # init
     config = U.set_debug_config(config)
-    dir_save, dir_save_ignore = init_exp(config)
+    dir_save, dir_save_ignore, wb_summary = init_exp(config)
     rh.save_model_architecture(dir_save, C.get_model(config))
 
     # train
-    trainner.train_cv(config)
+    trainner.train_cv(config, wb_summary)
 
     # end
     end = time.time()

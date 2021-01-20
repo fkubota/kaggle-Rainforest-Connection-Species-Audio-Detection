@@ -1,2 +1,2 @@
 debug,fold,model_name,loss_name,best_loss_val,best_acc_val
-True,1,ResNet18,ResNetLoss,0.21259,0.0
+True,1,ResNet18,ResNetLoss,0.214021,0.041667
