@@ -13,5 +13,5 @@ while getopts "p:g:" OPT
       \? ) usage ;;
     esac
   done 
-sudo docker run --rm -it --shm-size=8g --gpus $GPU -p $PORT:$PORT -v /home/fkubota/Git/:/home/user/work/ fkubota/rfcx bash
+sudo docker run --rm -it --shm-size=8g --gpus $GPU -p $PORT:$PORT -v /etc/localtime:/etc/localtime:ro -v /home/fkubota/Git/:/home/user/work/ fkubota/rfcx bash
 
