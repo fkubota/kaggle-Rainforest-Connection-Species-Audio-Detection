@@ -185,3 +185,7 @@ hoge
 ### 20200119
 - exp001
 	- get_index_foldにn_classesをチェックするassertを入れた
+
+
+### 20200129
+- 久々に復帰...
