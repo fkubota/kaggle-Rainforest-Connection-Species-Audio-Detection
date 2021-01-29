@@ -17,7 +17,7 @@ from criterion import mixup_criterion
 from early_stopping import EarlyStopping
 
 
-def train_cv(config, wb_summary):
+def train_cv(config):
     # config
     debug = config['globals']['debug']
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -105,6 +105,7 @@ def train_cv(config, wb_summary):
             if early_stopping.early_stop:
                 logger.info("Early stopping")
                 break
+        wb_fold.finish()
         # result
         rh.save_loss_figure(i_fold, epochs, losses_trn,
                             losses_val, dir_save_exp)
@@ -136,9 +137,14 @@ def train_cv(config, wb_summary):
     logger.info(f'acc_oof: {acc_oof:6f}')
 
     # wandb
+    wb_summary = wandb.init(project='kaggle-rfcx',
+                            group=exp_name,
+                            name='summary')
+    wb_summary.config.config = config
     wb_summary.log({'acc_val_folds_mean': acc_val_folds_mean,
                     'acc_val_folds_std': acc_val_folds_std,
                     'acc_oof': acc_oof})
+    wb_summary.finish()
 
     # 開放
     del result_dict

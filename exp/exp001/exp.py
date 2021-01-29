@@ -32,16 +32,16 @@ def init_exp(config):
         os.makedirs(dir_save_ignore)
 
     # wandb
-    wb_summary = wandb.init(project='kaggle-rfcx',
-                            group=exp_name,
-                            name='summary')
-    wb_summary.config.config = config
+    # wb_summary = wandb.init(project='kaggle-rfcx',
+    #                         group=exp_name,
+    #                         name='summary')
+    # wb_summary.config.config = config
 
     # set_seed
     U.set_seed(config['globals']['seed'])
 
     logger.info(':: out ::')
-    return dir_save, dir_save_ignore, wb_summary
+    return dir_save, dir_save_ignore
 
 
 def main():
@@ -58,11 +58,11 @@ def main():
 
     # init
     config = U.set_debug_config(config)
-    dir_save, dir_save_ignore, wb_summary = init_exp(config)
+    dir_save, dir_save_ignore = init_exp(config)
     rh.save_model_architecture(dir_save, C.get_model(config))
 
     # train
-    trainner.train_cv(config, wb_summary)
+    trainner.train_cv(config)
 
     # end
     end = time.time()
