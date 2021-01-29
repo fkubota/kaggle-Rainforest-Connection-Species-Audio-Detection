@@ -31,12 +31,6 @@ def init_exp(config):
     if not os.path.exists(dir_save_ignore):
         os.makedirs(dir_save_ignore)
 
-    # wandb
-    # wb_summary = wandb.init(project='kaggle-rfcx',
-    #                         group=exp_name,
-    #                         name='summary')
-    # wb_summary.config.config = config
-
     # set_seed
     U.set_seed(config['globals']['seed'])
 

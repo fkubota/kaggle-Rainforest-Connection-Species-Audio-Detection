@@ -1,8 +1,8 @@
 globals:
   seed: 5713
-  debug: True
+  debug: False
   mixup: False
-  num_epochs: 40
+  num_epochs: 35
   # num_epochs: 2
 
 path:

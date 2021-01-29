@@ -54,6 +54,7 @@ def train_cv(config):
         wb_fold = wandb.init(project='kaggle-rfcx',
                              group=exp_name,
                              name=f'fold{i_fold}')
+        wb_fold.exp_name = exp_name
 
         epochs = []
         losses_trn = []
@@ -141,6 +142,7 @@ def train_cv(config):
                             group=exp_name,
                             name='summary')
     wb_summary.config.config = config
+    wb_summary.config.exp_name = exp_name
     wb_summary.log({'acc_val_folds_mean': acc_val_folds_mean,
                     'acc_val_folds_std': acc_val_folds_std,
                     'acc_oof': acc_oof})
