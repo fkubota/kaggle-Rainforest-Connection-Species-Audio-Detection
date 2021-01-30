@@ -107,7 +107,7 @@ def train_cv(config):
                 break
         wb_fold.finish()
         # result
-        rh.save_plot_figure(i_fold, epochs, losses_trn, accs_val
+        rh.save_plot_figure(i_fold, epochs, losses_trn, accs_val,
                             losses_val, dir_save_exp)
         rh.save_result_csv(i_fold, best_loss_val,
                            best_acc_val, dir_save_exp, config)

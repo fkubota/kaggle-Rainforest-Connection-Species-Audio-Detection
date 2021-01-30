@@ -193,4 +193,15 @@ hoge
 	- ベースライン
 	- lwlrapは未実装
 	- result
+		- time: 
 		- oof_accuracy: 0.717105
+
+
+### 20200130
+- run_docker.shにg=-1の場合分けを追加
+- exp002
+	- accのグラフ追加
+	- lwlrap追加
+	- result
+		- time:
+		- oof_accuracy: 
