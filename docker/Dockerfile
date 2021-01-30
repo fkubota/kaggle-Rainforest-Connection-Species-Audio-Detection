@@ -14,8 +14,8 @@ RUN mkdir -p $HOME/bin
 RUN ln -s -f /usr/bin/python3.8 /usr/bin/python
 RUN ln -s -f /usr/bin/python3.8 /usr/bin/python3
 RUN pip3 install --upgrade pip
-RUN pip3 install -r /code/requirements.txt
 RUN pip3 install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3 install -r /code/requirements.txt
 
 
 # デフォルト作業ディレクトリ
