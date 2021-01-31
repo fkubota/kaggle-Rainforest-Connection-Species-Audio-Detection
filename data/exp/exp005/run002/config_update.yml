@@ -1,0 +1,4 @@
+dataset:
+  params:
+    period: 7
+    shift_duration: 4

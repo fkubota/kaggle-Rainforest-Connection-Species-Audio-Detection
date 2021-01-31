@@ -245,3 +245,25 @@ hoge
 
 - exp005
 	- base: exp002(lwlrap=0.817672)
+	- periodとshift_durationをsweepしてみる
+	- run001
+		- period: 3
+		- shift_duration: 2
+		- result
+			- time: 2h30m程度
+			- oof_accuracy: 
+			- oof_lwlrap: 
+	- run002
+		- period: 7
+		- shift_duration: 4
+		- result
+			- time: 2h30m程度
+			- oof_accuracy: 
+			- oof_lwlrap: 
+	- run003
+		- period: 20
+		- shift_duration: 7
+		- result
+			- time: 2h30m程度
+			- oof_accuracy: 
+			- oof_lwlrap: 
