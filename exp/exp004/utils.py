@@ -33,6 +33,7 @@ def init_exp(config, config_update, run_name):
     deepupdate(config, config_update)
     with open(f'{dir_save}/config_update.yml', 'w') as path:
         yaml.dump(config_update, path)
+    logger.info(f'config_update: {config_update}')
 
     # set_seed
     set_seed(config['globals']['seed'])

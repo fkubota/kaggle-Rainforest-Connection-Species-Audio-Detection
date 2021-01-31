@@ -1,5 +1,2 @@
-globals:
-  num_epochs: 30
-  seed: 5714
 split:
   seed: 5714
