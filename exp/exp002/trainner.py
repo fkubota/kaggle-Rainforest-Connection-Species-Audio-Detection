@@ -33,6 +33,7 @@ def train_cv(config):
 
     # init
     acc_val_folds = []
+    lwlrap_val_folds = []
     if debug:
         oof_sig = np.zeros([n_classes*n_fold, n_classes])
     else:
@@ -54,12 +55,15 @@ def train_cv(config):
         wb_fold = wandb.init(project='kaggle-rfcx',
                              group=exp_name,
                              name=f'fold{i_fold}')
+        wb_fold.config.config = config
 
         epochs = []
         losses_trn = []
         losses_val = []
         accs_val = []
+        lwlraps_val = []
         best_acc_val = 0
+        best_lwlrap_val = 0
         best_loss_val = 0
         best_output_sig = 0
         save_path = f'{dir_save_ignore_exp}/'\
@@ -78,56 +82,73 @@ def train_cv(config):
             loss_trn = result_dict['loss_trn']
             loss_val = result_dict['loss_val']
             acc_val = result_dict['acc_val']
+            lwlrap_val = result_dict['lwlrap_val']
             logger.info(f'[fold({i_fold+1})epoch({epoch})]'
                         f'loss_trn={loss_trn:.6f} '
                         f'loss_val={loss_val:.6f} '
-                        f'acc_val={acc_val:.6f}')
+                        f'acc_val={acc_val:.6f} '
+                        f'lwlrap_val={lwlrap_val:.6f}')
             wb_fold.log({'epoch': epoch,
                          'loss_trn': loss_trn,
                          'loss_val': loss_val,
-                         'acc_val': acc_val})
+                         'acc_val': acc_val,
+                         'lwlrap_val': lwlrap_val})
 
             # 格納
-            epochs.append(epoch)
+            epochs.append(int(epoch))
             losses_trn.append(loss_trn)
             losses_val.append(loss_val)
             accs_val.append(acc_val)
+            lwlraps_val.append(lwlrap_val)
 
             # best model ?
             is_update = early_stopping(loss_val, result_dict['model'], debug)
             if is_update:
                 best_loss_val = loss_val
                 best_acc_val = acc_val
+                best_lwlrap_val = lwlrap_val
                 best_output_sig = output_sig
                 wb_fold.summary['loss_val'] = best_loss_val
                 wb_fold.summary['acc_val'] = best_acc_val
+                wb_fold.summary['lwlrap_val'] = best_lwlrap_val
 
             if early_stopping.early_stop:
                 logger.info("Early stopping")
                 break
         wb_fold.finish()
         # result
-        rh.save_plot_figure(i_fold, epochs, losses_trn, accs_val,
+        rh.save_plot_figure(i_fold, epochs, losses_trn, accs_val, lwlraps_val,
                             losses_val, dir_save_exp)
-        rh.save_result_csv(i_fold, best_loss_val,
-                           best_acc_val, dir_save_exp, config)
+        rh.save_result_csv(i_fold, best_loss_val, best_acc_val, best_lwlrap_val,
+                           dir_save_exp, config)
 
         # --- fold end ---
         # oof_sig
         acc_val_folds.append(best_acc_val)
+        lwlrap_val_folds.append(best_lwlrap_val)
         if debug:
             oof_sig[i_fold*n_classes:(i_fold+1)*n_classes] = best_output_sig
         else:
             oof_sig[val_idxs, :] = best_output_sig
         logger.info(f'best_loss_val: {best_loss_val:.6f}, '
-                    f'best_acc_val: {best_acc_val:.6f}')
+                    f'best_acc_val: {best_acc_val:.6f}, '
+                    f'best_lwlrap_val: {best_lwlrap_val:.6f}')
 
     oof = np.argmax(oof_sig, axis=1)
+    oof_sig = torch.tensor(oof_sig)
+    labels = np.zeros([len(oof), 24], dtype=int)
     if debug:
         # 適当な値を答えとする
+        labels[:, 0] = 1
+        labels = torch.tensor(labels)
         acc_oof = accuracy_score(np.zeros(len(oof)), oof)
+        lwlrap_oof = U.LWLRAP(oof_sig, labels)
     else:
+        for i_id, id_ in enumerate(trn_tp['species_id'].values):
+            labels[i_id][id_] = 1
+        labels = torch.tensor(labels)
         acc_oof = accuracy_score(trn_tp['species_id'].values, oof)
+        lwlrap_oof = U.LWLRAP(oof_sig, labels)
 
     # acc_val_folds
     acc_val_folds_mean = np.mean(acc_val_folds)
@@ -136,6 +157,13 @@ def train_cv(config):
                 f'{acc_val_folds_mean:.6f} +- {acc_val_folds_std:6f}')
     logger.info(f'acc_oof: {acc_oof:6f}')
 
+    # lwlrap_val_folds
+    lwlrap_val_folds_mean = np.mean(lwlrap_val_folds)
+    lwlrap_val_folds_std = np.std(lwlrap_val_folds)
+    logger.info(f'lwlrap_folds(mean, std): '
+                f'{lwlrap_val_folds_mean:.6f} +- {lwlrap_val_folds_std:6f}')
+    logger.info(f'lwlrap_oof: {lwlrap_oof:6f}')
+
     # wandb
     wb_summary = wandb.init(project='kaggle-rfcx',
                             group=exp_name,
@@ -143,7 +171,10 @@ def train_cv(config):
     wb_summary.config.config = config
     wb_summary.log({'acc_val_folds_mean': acc_val_folds_mean,
                     'acc_val_folds_std': acc_val_folds_std,
-                    'acc_oof': acc_oof})
+                    'acc_oof': acc_oof,
+                    'lwlrap_val_folds_mean': lwlrap_val_folds_mean,
+                    'lwlrap_val_folds_std': lwlrap_val_folds_std,
+                    'lwlrap_oof': lwlrap_oof})
     wb_summary.finish()
 
     # 開放
@@ -190,8 +221,10 @@ def train_fold(i_fold, trn_tp, model,
     del data
 
     # eval valid
-    loss_val, acc_val, output_sig = get_loss_score(model, val_loader,
-                                                   criterion, device)
+    loss_val, acc_val, lwlrap_val, output_sig = get_loss_score(model,
+                                                               val_loader,
+                                                               criterion,
+                                                               device)
 
     result_dict = {
             'model': model,
@@ -200,6 +233,7 @@ def train_fold(i_fold, trn_tp, model,
             'loss_trn': loss_trn,
             'loss_val': loss_val,
             'acc_val': acc_val,
+            'lwlrap_val': lwlrap_val
             }
     return result_dict
 
@@ -210,6 +244,7 @@ def get_loss_score(model, val_loader, criterion, device):
     y_pred_list = []
     y_true_list = []
     output_sig_list = []
+    lwlrap_val = 0
     for batch_idx, (data, target) in enumerate(val_loader):
         data, target = data.to(device), target.to(device)
         output = model(data)
@@ -224,6 +259,7 @@ def get_loss_score(model, val_loader, criterion, device):
         y_pred_list.append(_y_pred)
         y_true_list.append(_y_true)
         output_sig_list.append(output_sig)
+        lwlrap_val += U.LWLRAP(output_, target) / len(val_loader)
 
     loss_val = epoch_valid_loss / len(val_loader.dataset)
     y_pred = np.concatenate(y_pred_list, axis=0)
@@ -231,4 +267,4 @@ def get_loss_score(model, val_loader, criterion, device):
     output_sig = np.concatenate(output_sig_list, axis=0)
     acc_val = accuracy_score(y_true, y_pred)
     del data
-    return loss_val, acc_val, output_sig
+    return loss_val, acc_val, lwlrap_val, output_sig
