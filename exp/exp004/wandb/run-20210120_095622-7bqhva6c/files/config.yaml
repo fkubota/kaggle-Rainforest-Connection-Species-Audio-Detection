@@ -1,0 +1,66 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.12
+    framework: torch
+    is_jupyter_run: true
+    is_kaggle_kernel: false
+    python_version: 3.6.9
+config:
+  desc: null
+  value:
+    dataset:
+      melspec_params:
+        n_mels: 128
+      name: SpectrogramDataset
+      params:
+        img_size: 224
+        period: 5
+        shift_duration: 4
+    globals:
+      debug: true
+      mixup: false
+      num_epochs: 2
+      seed: 5713
+    loader:
+      train:
+        batch_size: 1
+        num_workers: 2
+        shuffle: true
+      valid:
+        batch_size: 1
+        num_workers: 2
+        shuffle: false
+    loss:
+      name: ResNetLoss
+      params:
+        loss_type: bcew
+    model:
+      name: ResNet18
+      params:
+        n_classes: 24
+        pretrained: true
+    optimizer:
+      name: SGD
+      params:
+        lr: 0.05
+        momentum: 0.9
+    path:
+      dir_save: ../../data/exp/
+      dir_save_ignore: ../../data_ignore/exp/
+      dir_test: ../../data_ignore/input/test/
+      dir_train: ../../data_ignore/input/train/
+      path_sample_submission: ../../data_ignore/input/sample_submission.csv
+      path_train_tp: ../../data_ignore/input/train_tp.csv
+    scheduler:
+      name: CosineAnnealingLR
+      params:
+        T_max: 10
+    split:
+      n_fold: 2
+      seed: 5713
+status:
+  desc: null
+  value: finish
