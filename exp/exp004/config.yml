@@ -1,6 +1,6 @@
 globals:
   seed: 5713
-  debug: False
+  debug: True
   mixup: False
   num_epochs: 35
   # num_epochs: 2

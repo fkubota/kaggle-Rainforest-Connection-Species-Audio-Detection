@@ -1,10 +1,36 @@
 from ipdb import set_trace as st
 import os
-import time
+import subprocess
 import random
 import numpy as np
 from loguru import logger
 import torch
+
+
+def init_exp(config):
+    '''
+    dir_saveの作成と、dir_saveの取得
+    '''
+    logger.info(':: in ::')
+
+    # git の hash値を取得
+    cmd = "git rev-parse --short HEAD"
+    hash_ = subprocess.check_output(cmd.split()).strip().decode('utf-8')
+    logger.info(f'hash: {hash_}')
+
+    # 保存ディレクトリの用意
+    dir_save, dir_save_ignore, exp_name = get_save_dir_exp(config)
+    logger.info(f'exp_name: {exp_name}')
+    if not os.path.exists(dir_save):
+        os.makedirs(dir_save)
+    if not os.path.exists(dir_save_ignore):
+        os.makedirs(dir_save_ignore)
+
+    # set_seed
+    set_seed(config['globals']['seed'])
+
+    logger.info(':: out ::')
+    return dir_save, dir_save_ignore
 
 
 def set_seed(seed):
@@ -12,9 +38,9 @@ def set_seed(seed):
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
     torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)  # type: ignore
-    torch.backends.cudnn.deterministic = True  # type: ignore
-    torch.backends.cudnn.benchmark = True  # type: ignore
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = True
 
 
 def get_save_dir_exp(config):
