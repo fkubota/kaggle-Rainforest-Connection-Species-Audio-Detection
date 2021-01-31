@@ -229,6 +229,7 @@ hoge
 	- base: exp002(lwlrap=0.817672)
 	- sweepできるように改良した
 	- splitのseedを5714, 5715で回す(exp002はseed:5713)
+	- split依存結構あるなぁ。
 	- run001
 		- split.seed: 5714
 		- result
@@ -239,12 +240,14 @@ hoge
 		- split.seed: 5715
 		- result
 			- time: 2h31m
-			- oof_accuracy: 
-			- oof_lwlrap: 
+			- oof_accuracy: 0.7113
+			- oof_lwlrap: 0.8131
 
 
 - exp005
 	- base: exp002(lwlrap=0.817672)
+		- period: 5
+		- shift_duration: 4
 	- periodとshift_durationをsweepしてみる
 	- run001
 		- period: 3
@@ -267,3 +270,8 @@ hoge
 			- time: 2h30m程度
 			- oof_accuracy: 
 			- oof_lwlrap: 
+
+
+# 20200201
+- 今日からカンム！！
+- exp006
