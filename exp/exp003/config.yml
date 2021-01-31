@@ -50,7 +50,7 @@ loss:
 model:
   name: ResNet18
   params:
-    pretrained: True
+    pretrained: False
     n_classes: 24
 
 optimizer:
