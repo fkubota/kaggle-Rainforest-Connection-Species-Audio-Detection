@@ -220,6 +220,9 @@ hoge
 	- base: exp002
 	- pretrained=Falseにしてみた
 	- result
-		- time: 
-		- oof_accuracy:
-		- oof_lwlrap:
+		- pretrainedってめっちゃ効くんだな
+		- time: 2h36m
+		- oof_accuracy: 0.5181
+		- oof_lwlrap: 0.7196
+
+- exp004

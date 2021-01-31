@@ -17,7 +17,7 @@ from criterion import mixup_criterion
 from early_stopping import EarlyStopping
 
 
-def train_cv(config):
+def train_cv(config, run_name):
     # config
     debug = config['globals']['debug']
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -25,7 +25,8 @@ def train_cv(config):
     n_epoch = config['globals']['num_epochs']
     path_trn_tp = config['path']['path_train_tp']
     n_classes = config['model']['params']['n_classes']
-    dir_save_exp, dir_save_ignore_exp, _ = U.get_save_dir_exp(config)
+    dir_save_exp, dir_save_ignore_exp, exp_name = U.get_save_dir_exp(
+                                                            config, run_name)
 
     # load data
     pwd = os.path.dirname(os.path.abspath(__file__))
@@ -49,11 +50,10 @@ def train_cv(config):
         criterion = C.get_criterion(config)
         optimizer = C.get_optimizer(model, config)
         scheduler = C.get_scheduler(optimizer, config)
-        _, _, exp_name = U.get_save_dir_exp(config)
 
         # wandb
         wb_fold = wandb.init(project='kaggle-rfcx',
-                             group=exp_name,
+                             group=f'{exp_name}_{run_name}',
                              name=f'fold{i_fold}')
         wb_fold.config.config = config
 
@@ -166,7 +166,7 @@ def train_cv(config):
 
     # wandb
     wb_summary = wandb.init(project='kaggle-rfcx',
-                            group=exp_name,
+                            group=f'{exp_name}_{run_name}',
                             name='summary')
     wb_summary.config.config = config
     wb_summary.log({'acc_val_folds_mean': acc_val_folds_mean,

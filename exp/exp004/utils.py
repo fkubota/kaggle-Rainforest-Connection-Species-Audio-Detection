@@ -1,5 +1,6 @@
 from ipdb import set_trace as st
 import os
+import yaml
 import subprocess
 import random
 import numpy as np
@@ -7,9 +8,11 @@ from loguru import logger
 import torch
 
 
-def init_exp(config):
+def init_exp(config, config_update, run_name):
     '''
-    dir_saveの作成と、dir_saveの取得
+    - git hashの取得
+    - dir_saveの作成と、dir_saveの取得
+    - configのupdate
     '''
     logger.info(':: in ::')
 
@@ -19,18 +22,35 @@ def init_exp(config):
     logger.info(f'hash: {hash_}')
 
     # 保存ディレクトリの用意
-    dir_save, dir_save_ignore, exp_name = get_save_dir_exp(config)
-    logger.info(f'exp_name: {exp_name}')
+    dir_save, dir_save_ignore, exp_name = get_save_dir_exp(config, run_name)
+    logger.info(f'exp_name: {exp_name}_{run_name}')
     if not os.path.exists(dir_save):
         os.makedirs(dir_save)
     if not os.path.exists(dir_save_ignore):
         os.makedirs(dir_save_ignore)
 
+    # configのupdateとconfig_updateの保存
+    deepupdate(config, config_update)
+    with open(f'{dir_save}/config_update.yml', 'w') as path:
+        yaml.dump(config_update, path)
+
     # set_seed
     set_seed(config['globals']['seed'])
 
     logger.info(':: out ::')
-    return dir_save, dir_save_ignore
+    return dir_save, dir_save_ignore, config
+
+
+def deepupdate(dict_base, other):
+    '''
+    ディクショナリを再帰的に更新する
+    ref: https://www.greptips.com/posts/1242/
+    '''
+    for k, v in other.items():
+        if isinstance(v, dict) and k in dict_base:
+            deepupdate(dict_base[k], v)
+        else:
+            dict_base[k] = v
 
 
 def set_seed(seed):
@@ -43,11 +63,12 @@ def set_seed(seed):
     torch.backends.cudnn.benchmark = True
 
 
-def get_save_dir_exp(config):
+def get_save_dir_exp(config, run_name):
     _dir = os.path.dirname(os.path.abspath(__file__))
     exp_name = _dir.split('/')[-1]
-    dir_save_exp = f'{config["path"]["dir_save"]}{exp_name}'
-    dir_save_ignore_exp = f'{config["path"]["dir_save_ignore"]}{exp_name}'
+    dir_save_exp = f'{config["path"]["dir_save"]}{exp_name}/{run_name}'
+    dir_save_ignore_exp = f'{config["path"]["dir_save_ignore"]}'\
+                          f'{exp_name}/{run_name}'
     return dir_save_exp, dir_save_ignore_exp, exp_name
 
 
