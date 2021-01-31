@@ -4,10 +4,17 @@
 
 [Rainforest-Connection-Species-Audio-Detection](https://www.kaggle.com/c/rfcx-species-audio-detection/overview) コンペのリポジトリ
 
+デバッグ実行: `ipython3 --pdb exp.py`  
+docker build: `sh build_docker.sh`  
+docker run: `sh run_docker.sh -p 8713 -g 0`  
+	- gpu使わない場合は `-g -1` とする
+
+
 ## Links
 
 - [googledrive](https://drive.google.com/drive/u/1/folders/1oTq6R1t5OZCwaVR9u9ChoA_SRZi6r7Ol)
 - [issue board](https://github.com/fkubota/kaggle-Rainforest-Connection-Species-Audio-Detection/projects/1)
+- [yukiさんのgithub](https://github.com/yuki-a4/rfcx-species-audio-detection/)
 
 ## Paper
 hoge
@@ -193,7 +200,7 @@ hoge
 	- ベースライン
 	- lwlrapは未実装
 	- result
-		- time: 
+		- time: 2h36m
 		- oof_accuracy: 0.717105
 
 
@@ -203,5 +210,16 @@ hoge
 	- accのグラフ追加
 	- lwlrap追加
 	- result
-		- time:
-		- oof_accuracy: 
+		- time: 2h35m
+		- oof_accuracy: 0.719572
+		- oof_lwlrap: 0.817672
+
+
+### 20200131
+- exp003
+	- base: exp002
+	- pretrained=Falseにしてみた
+	- result
+		- time: 
+		- oof_accuracy:
+		- oof_lwlrap:
