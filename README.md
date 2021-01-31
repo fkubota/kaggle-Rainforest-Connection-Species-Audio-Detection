@@ -226,3 +226,22 @@ hoge
 		- oof_lwlrap: 0.7196
 
 - exp004
+	- base: exp002(lwlrap=0.817672)
+	- sweepできるように改良した
+	- splitのseedを5714, 5715で回す(exp002はseed:5713)
+	- run001
+		- split.seed: 5714
+		- result
+			- time: 2h31m
+			- oof_accuracy: 0.6842
+			- oof_lwlrap: 0.7948
+	- run002
+		- split.seed: 5715
+		- result
+			- time: 2h31m
+			- oof_accuracy: 
+			- oof_lwlrap: 
+
+
+- exp005
+	- base: exp002(lwlrap=0.817672)
