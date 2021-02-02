@@ -1,0 +1,3 @@
+dataset:
+  melspec_params:
+    fmin: 50
