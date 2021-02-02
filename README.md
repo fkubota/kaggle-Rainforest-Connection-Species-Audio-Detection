@@ -254,28 +254,48 @@ hoge
 		- shift_duration: 2
 		- result
 			- time: 2h30m程度
-			- oof_accuracy: 
-			- oof_lwlrap: 
+			- oof_accuracy: 0.7245
+			- oof_lwlrap: 0.8245
 	- run002
 		- period: 7
 		- shift_duration: 4
 		- result
 			- time: 2h30m程度
-			- oof_accuracy: 
-			- oof_lwlrap: 
+			- oof_accuracy: 0.727
+			- oof_lwlrap: 0.8235
 	- run003
 		- period: 20
 		- shift_duration: 7
 		- result
 			- time: 2h30m程度
-			- oof_accuracy: 
-			- oof_lwlrap: 
+			- oof_accuracy: 0.6793
+			- oof_lwlrap: 0.7946
 
 
 # 20200201
 - 今日からカンム！！
 - exp006
 	- base: exp002(lwlrap=0.817672)
-		- period: 5
-		- shift_duration: 4
-	- periodとshift_durationをsweepしてみる
+		- melspec.fmin: 0
+	- melspec_params.fminのsweepをしてみる
+	- run001
+		- fmin: 5
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 0.81
+	- run002
+		- fmin: 22
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 0.8196
+	- run003
+		- fmin: 50
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 0.8241
+	- run004
+		- fmin: 90
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 0.826
+
