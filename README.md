@@ -275,3 +275,7 @@ hoge
 # 20200201
 - 今日からカンム！！
 - exp006
+	- base: exp002(lwlrap=0.817672)
+		- period: 5
+		- shift_duration: 4
+	- periodとshift_durationをsweepしてみる
