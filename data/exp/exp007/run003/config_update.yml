@@ -1,0 +1,3 @@
+dataset:
+  melspec_params:
+    fmax: 23000

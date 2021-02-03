@@ -272,7 +272,7 @@ hoge
 			- oof_lwlrap: 0.7946
 
 
-# 20200201
+### 20200201
 - 今日からカンム！！
 - exp006
 	- base: exp002(lwlrap=0.817672)
@@ -299,3 +299,24 @@ hoge
 			- time: 2h30m程度
 			- oof_lwlrap: 0.826
 
+### 20200203
+- exp007
+	- base: exp002(lwlrap=0.817672)
+		- melspec.fmax: sr/2 = 24000
+	- melspec_params.fmax のsweepをしてみる
+	- f_max最大値は13687.5
+	- run001
+		- fmax: 14000
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 
+	- run002
+		- fmax: 18000
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 
+	- run003
+		- fmax: 23000
+		- result
+			- time: 2h30m程度
+			- oof_lwlrap: 
