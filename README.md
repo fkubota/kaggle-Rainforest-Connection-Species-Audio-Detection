@@ -309,14 +309,26 @@ hoge
 		- fmax: 14000
 		- result
 			- time: 2h30m程度
-			- oof_lwlrap: 
+			- oof_lwlrap: 0.8276
 	- run002
 		- fmax: 18000
 		- result
 			- time: 2h30m程度
-			- oof_lwlrap: 
+			- oof_lwlrap: 0.8236
 	- run003
 		- fmax: 23000
 		- result
 			- time: 2h30m程度
+			- oof_lwlrap: 0.8192
+
+- exp008
+	- base: exp002(lwlrap=0.817672)
+	- exp006, exp007で、melspectrogramのパラメータを変えたほうがいいとわかった
+	- 与えられたデータのf_min, f_maxのそれぞれの最小値、最大値はf_min=93.75, f_max=13687.5なので以下のようにする
+		- fmin = 90
+		- fmax = 14000
+	- run001
+		- fmin: 90
+		- fmax: 14000
+		- result
 			- oof_lwlrap: 
