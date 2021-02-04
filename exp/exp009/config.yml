@@ -22,16 +22,14 @@ dataset:
   melspec_params:
     n_mels: 128
     # n_mels: 256
-    # fmin: 20
-    # fmax: 16000
+    fmin: 90
+    fmax: 14000
 
 loader:
   train:
     batch_size: 30
-    # batch_size: 3
     shuffle: True
     num_workers: 2
-    # num_workers: 0
   valid:
     batch_size: 10
     shuffle: False
@@ -48,7 +46,7 @@ loss:
     loss_type: bcew
 
 model:
-  name: ResNet18
+  name: ResNet18_2
   params:
     pretrained: True
     n_classes: 24
