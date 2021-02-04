@@ -5,9 +5,6 @@ import torch.nn.functional as F
 from torchvision import models
 
 
-####################################################################
-#     Resnet50
-####################################################################
 class ResNet18(nn.Module):
     def __init__(self, params):
         super().__init__()
@@ -17,10 +14,7 @@ class ResNet18(nn.Module):
 
         self.resnet = models.resnet18(pretrained=pretrained)
         in_features = self.resnet.fc.in_features
-        # self.resnet.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
-        self.resnet.avgpool = nn.AdaptiveMaxPool2d(output_size=(1, 1))
-        # self.resnet.avgpool = nn.AdaptiveMaxPool2d(output_size=(1, 1)) +\
-            # nn.AdaptiveAvgPool2d(output_size=(1, 1))
+        self.resnet.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
         self.resnet.fc = nn.Linear(in_features, num_classes)
 
     def forward(self, x):
@@ -63,17 +57,31 @@ class ResNet18_2(nn.Module):
         self.__class__.__name__ = 'ResNet18'
         num_classes = params['n_classes']
         pretrained = params['pretrained']
+        self.gap_ratio = params['gap_ratio']
 
+        self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
+        self.maxpool = nn.AdaptiveMaxPool2d(output_size=(1, 1))
         self.resnet = models.resnet18(pretrained=pretrained)
+        # in_features = self.resnet.fc.in_features
+        # # self.resnet.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
+        # self.resnet.avgpool = torch.cat([
+        #         nn.AdaptiveAvgPool2d(output_size=(1, 1)),
+        #         nn.AdaptiveMaxPool2d(output_size=(1, 1))
+        #         ])
+        # self.resnet.fc = nn.Linear(in_features, num_classes)
+        layers = list(self.resnet.children())[:-2]
+        # layers.append(nn.AdaptiveMaxPool2d(1))
+        self.encoder = nn.Sequential(*layers)
+
         in_features = self.resnet.fc.in_features
-        # self.resnet.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
-        self.resnet.avgpool = nn.AdaptiveMaxPool2d(output_size=(1, 1))
-        # self.resnet.avgpool = nn.AdaptiveMaxPool2d(output_size=(1, 1)) +\
-            # nn.AdaptiveAvgPool2d(output_size=(1, 1))
-        self.resnet.fc = nn.Linear(in_features, num_classes)
+        self.classifier = nn.Linear(in_features, num_classes)
 
     def forward(self, x):
-        x = self.resnet(x)
+        batch_size = x.size(0)
+        x = self.encoder(x)
+        x = self.gap_ratio*self.avgpool(x) + (1-self.gap_ratio)*self.maxpool(x)
+        x = x.view(batch_size, -1)
+        x = self.classifier(x)
         multiclass_proba = F.softmax(x, dim=1)
         multilabel_proba = torch.sigmoid(x)
         return {
