@@ -336,6 +336,24 @@ hoge
 ### 20200204
 - exp009
 	- base: exp008(lwlrap=0.8236)
-	- Resnet18_2: resnet18にglobal ave poolとglobal max poolの和を追加
-	-
+	- Resnet18: resnet18にGlobalMaxPoolingに変更してみた
+	- run001
+		- result
+			- 大失敗！！
+			- oof_lwlrap: 0.3944
+
 	
+- exp010
+	- base: exp008(lwlrap=0.8236)
+	- Resnet18_2: resnet18に GAPとGMPの和を追加
+	- 混ぜる比率をハイパラにした
+	- run001
+		- gap_ratio: 0.9
+	- run002
+		- gap_ratio: 0.7
+	- run003
+		- gap_ratio: 0.5
+	- run004
+		- gap_ratio: 0.3
+	- run005
+		- gap_ratio: 0.1
