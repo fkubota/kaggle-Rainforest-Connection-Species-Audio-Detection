@@ -1,6 +1,6 @@
 globals:
   seed: 5713
-  debug: True
+  debug: False
   mixup: False
   num_epochs: 35
   # num_epochs: 2
@@ -46,7 +46,7 @@ loss:
     loss_type: bcew
 
 model:
-  name: ResNet18_2
+  name: ResNet18
   params:
     pretrained: True
     n_classes: 24

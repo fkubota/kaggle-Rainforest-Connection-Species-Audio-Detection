@@ -80,7 +80,7 @@
         (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
       )
     )
-    (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+    (avgpool): AdaptiveMaxPool2d(output_size=(1, 1))
     (fc): Linear(in_features=512, out_features=24, bias=True)
   )
 )>
