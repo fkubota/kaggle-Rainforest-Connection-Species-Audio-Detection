@@ -55,17 +55,8 @@ def main():
             '''
             dataset:
                 melspec_params:
+                    fmin: 90
                     fmax: 14000
-            ''',
-            '''
-            dataset:
-                melspec_params:
-                    fmax: 18000
-            ''',
-            '''
-            dataset:
-                melspec_params:
-                    fmax: 23000
             ''',
             ]
 

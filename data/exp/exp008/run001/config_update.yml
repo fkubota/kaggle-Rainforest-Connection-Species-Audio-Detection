@@ -1,0 +1,4 @@
+dataset:
+  melspec_params:
+    fmax: 14000
+    fmin: 90
