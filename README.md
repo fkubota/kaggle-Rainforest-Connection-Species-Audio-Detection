@@ -332,3 +332,8 @@ hoge
 		- fmax: 14000
 		- result
 			- oof_lwlrap: 
+
+### 20200204
+- exp009
+	- base: exp002(lwlrap=0.817672)
+	- resnet18にglobal ave poolとglobal max poolの和を追加
