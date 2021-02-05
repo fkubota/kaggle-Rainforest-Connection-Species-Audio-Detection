@@ -346,11 +346,12 @@ hoge
 - exp010
 	- base: exp008(lwlrap=0.8236)
 	- Resnet18_2: resnet18に GAPとGMPの和を追加
+	- gap_ratio: 1はexp008と同じ結果になるはず
 	- 混ぜる比率をハイパラにした
 	- run001
-		- gap_ratio: 0.9
+		- gap_ratio: 1
 	- run002
-		- gap_ratio: 0.7
+		- gap_ratio: 0.75
 	- run003
 		- gap_ratio: 0.5
 	- run004
