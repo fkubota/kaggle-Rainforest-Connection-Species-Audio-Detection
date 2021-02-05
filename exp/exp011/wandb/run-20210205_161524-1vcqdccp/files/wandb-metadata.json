@@ -1,0 +1,23 @@
+{
+    "os": "Linux-5.8.0-38-generic-x86_64-with-glibc2.29",
+    "python": "3.8.5",
+    "heartbeatAt": "2021-02-05T07:15:25.738540",
+    "startedAt": "2021-02-05T07:15:24.962517",
+    "docker": null,
+    "gpu": "GeForce RTX 3070",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "git": {
+        "remote": "git@github.com:fkubota/kaggle-Rainforest-Connection-Species-Audio-Detection.git",
+        "commit": "6209249e0b733081e70d6a042d3362d2930f24d7"
+    },
+    "email": null,
+    "root": "/home/user/work/kaggle-Rainforest-Connection-Species-Audio-Detection",
+    "host": "7a38e25e0e75",
+    "username": "user",
+    "executable": "/usr/bin/python3"
+}
