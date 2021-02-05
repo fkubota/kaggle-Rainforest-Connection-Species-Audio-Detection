@@ -348,13 +348,40 @@ hoge
 	- Resnet18_2: resnet18に GAPとGMPの和を追加
 	- gap_ratio: 1はexp008と同じ結果になるはず
 	- 混ぜる比率をハイパラにした
-	- run001
-		- gap_ratio: 1
-	- run002
-		- gap_ratio: 0.75
-	- run003
-		- gap_ratio: 0.5
-	- run004
-		- gap_ratio: 0.3
-	- run005
-		- gap_ratio: 0.1
+	- result
+		- run001
+			- gap_ratio: 1
+			- oof_lwlrap: 0.8207
+		- run002
+			- gap_ratio: 0.75
+			- oof_lwlrap: 0.8298
+		- run003
+			- gap_ratio: 0.5
+			- oof_lwlrap: 0.8149
+		- run004
+			- gap_ratio: 0.3
+			- oof_lwlrap: 0.7972
+		- run005
+			- gap_ratio: 0.1
+			- oof_lwlrap: 0.5763
+
+### 20200205
+- exp011
+	- base: exp008(lwlrap=0.8236)
+	- Resnet18_2: resnet18に GAPとGMPの和を追加
+	- gap_ratio: 1はexp008と同じ結果になるはず
+	- exp010で0.75付近がよかったのでその周辺を探す
+	- result
+		- gap_ratioは 0.9が一番よさそう
+		- run001
+			- gap_ratio: 0.9
+			- oof_lwlrap: 0.8377
+		- run002
+			- gap_ratio: 0.8
+			- oof_lwlrap: 0.8288
+		- run003
+			- gap_ratio: 0.7
+			- oof_lwlrap: 0.8259
+
+- exp012
+	- yukiさんとのディスカッションで、GAPとGMPのconcatはどうだろうかという話になった。やってみる。
