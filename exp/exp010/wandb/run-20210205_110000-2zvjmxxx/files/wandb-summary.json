@@ -1,0 +1,1 @@
+{"acc_val_folds_mean": 0.42947446535788975, "acc_val_folds_std": 0.15153030187998928, "acc_oof": 0.4292763157894737, "lwlrap_val_folds_mean": 0.5761372015476227, "lwlrap_val_folds_std": 0.13699386313268472, "lwlrap_oof": 0.5762789845466614, "_step": 0, "_runtime": 0, "_timestamp": 1612490400}
