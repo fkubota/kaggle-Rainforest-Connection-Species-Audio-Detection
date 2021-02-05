@@ -55,27 +55,17 @@ def main():
             '''
             model:
                 params:
-                    gap_ratio: 1
+                    gap_ratio: 0.9
             ''',
             '''
             model:
                 params:
-                    gap_ratio: 0.75
+                    gap_ratio: 0.8
             ''',
             '''
             model:
                 params:
-                    gap_ratio: 0.5
-            ''',
-            '''
-            model:
-                params:
-                    gap_ratio: 0.3
-            ''',
-            '''
-            model:
-                params:
-                    gap_ratio: 0.1
+                    gap_ratio: 0.7
             ''',
             ]
 
