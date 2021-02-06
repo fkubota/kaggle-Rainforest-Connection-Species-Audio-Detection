@@ -375,7 +375,7 @@ hoge
 		- gap_ratioは 0.9が一番よさそう
 		- run001
 			- gap_ratio: 0.9
-			- oof_lwlrap: 0.8377
+			- oof_lwlrap: 0.8377 <---- 過去最高スコア
 		- run002
 			- gap_ratio: 0.8
 			- oof_lwlrap: 0.8288
@@ -384,4 +384,27 @@ hoge
 			- oof_lwlrap: 0.8259
 
 - exp012
+	- base: exp008(lwlrap=0.8236)
 	- yukiさんとのディスカッションで、GAPとGMPのconcatはどうだろうかという話になった。やってみる。
+	- model_name: Resnet18_3
+	- result
+		- run001
+			- gap_ratio: 0.9
+			- oof_lwlrap: 0.8396  <---- 過去最高スコア
+		- run002
+			- gap_ratio: 0.8
+			- oof_lwlrap: 0.8321
+		- run003
+			- gap_ratio: 0.7
+			- oof_lwlrap: 0.8354
+
+
+### 20200206
+- exp013
+	- base: exp008(lwlrap=0.8236)
+	- 背景の情報をどれだけ使っているかを見極めるために、labelに関係なくクロップする
+	- result
+		- run001
+		- 完全にランダムでもaccuracyが0.5049あるのか...
+		- oof_lwlrap: 0.658
+		- oof_accuracy: 0.5049
