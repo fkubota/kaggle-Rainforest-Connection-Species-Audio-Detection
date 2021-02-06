@@ -22,17 +22,17 @@ config:
         period: 5
         shift_duration: 4
     globals:
-      debug: true
+      debug: false
       mixup: false
-      num_epochs: 2
+      num_epochs: 35
       seed: 5713
     loader:
       train:
-        batch_size: 1
+        batch_size: 30
         num_workers: 2
         shuffle: true
       valid:
-        batch_size: 1
+        batch_size: 10
         num_workers: 2
         shuffle: false
     loss:
@@ -61,5 +61,5 @@ config:
       params:
         T_max: 10
     split:
-      n_fold: 2
+      n_fold: 5
       seed: 5713

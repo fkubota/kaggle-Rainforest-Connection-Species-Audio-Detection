@@ -54,7 +54,7 @@ def main():
     list_config_str = [
             '''
             globals:
-                debug: True
+                debug: False
             ''',
             ]
 
