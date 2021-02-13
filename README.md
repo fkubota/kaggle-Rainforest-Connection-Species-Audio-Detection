@@ -408,3 +408,8 @@ hoge
 		- 完全にランダムでもaccuracyが0.5049あるのか...
 		- oof_lwlrap: 0.658
 		- oof_accuracy: 0.5049
+
+### 20200213
+- exp014
+	- base: exp013(lwlrap=0.658)
+	- consusion_matrixを実装

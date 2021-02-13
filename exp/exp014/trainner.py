@@ -123,7 +123,6 @@ def train_cv(config, run_name):
                            dir_save_exp, config)
 
         # --- fold end ---
-        # oof_sig
         acc_val_folds.append(best_acc_val)
         lwlrap_val_folds.append(best_lwlrap_val)
         if debug:
@@ -164,6 +163,10 @@ def train_cv(config, run_name):
                 f'{lwlrap_val_folds_mean:.6f} +- {lwlrap_val_folds_std:6f}')
     logger.info(f'lwlrap_oof: {lwlrap_oof:6f}')
 
+    # save confusion matrix
+    rh.save_confusion_matrix(trn_tp['species_id'].values[:len(oof)], oof,
+                             n_classes, dir_save_exp)
+
     # wandb
     wb_summary = wandb.init(project='kaggle-rfcx',
                             group=f'{exp_name}_{run_name}',
@@ -175,6 +178,10 @@ def train_cv(config, run_name):
                     'lwlrap_val_folds_mean': lwlrap_val_folds_mean,
                     'lwlrap_val_folds_std': lwlrap_val_folds_std,
                     'lwlrap_oof': lwlrap_oof})
+    wb_summary.log({"conf_mat" : wandb.plot.confusion_matrix(
+                                oof,
+                                trn_tp['species_id'].values[:len(oof)],
+                                )})
     wb_summary.finish()
 
     # 開放

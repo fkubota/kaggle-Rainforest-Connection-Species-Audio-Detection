@@ -1,9 +1,10 @@
-import numpy as np
 from ipdb import set_trace as st
+from icecream import ic
 from loguru import logger
 import pandas as pd
 import matplotlib.pylab as plt
 import configuration as C
+import utils as U
 
 
 def save_model_architecture(dir_save, model):
@@ -50,3 +51,12 @@ def save_result_csv(fold_i, best_loss, best_acc, best_lwlrap,
         'best_lwlrap_val': [round(best_lwlrap, 6)]
         })
     df.to_csv(f'{save_dir}/result_fold{fold_i}.csv', index=False)
+
+
+def save_confusion_matrix(truth, pred, n_classes, save_dir):
+    '''
+    confusion matrix を保存する
+    '''
+    save_path = f'{save_dir}/confusion_matrix.png'
+    fig = U.plot_confusion_matrix(truth, pred, n_classes)
+    fig.savefig(save_path)

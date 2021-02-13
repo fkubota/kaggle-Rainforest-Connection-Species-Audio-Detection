@@ -8,7 +8,7 @@ import subprocess
 import numpy as np
 from loguru import logger
 import matplotlib.pyplot as plt
-from sklearn.metrix import confusion_matrix
+from sklearn.metrics import confusion_matrix
 
 
 def init_exp(config, config_update, run_name):
@@ -171,18 +171,18 @@ def LWLRAP(preds, labels):
     return score.item()
 
 
-def plot_confusion_matrix(truth, pred, classes, normalize=False, title=''):
+def plot_confusion_matrix(truth, pred, n_classes, normalize=False, title=''):
     cm = confusion_matrix(truth, pred)
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 10))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title('Confusion matrix', size=15)
     plt.colorbar(fraction=0.046, pad=0.04)
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    tick_marks = np.arange(n_classes)
+    plt.xticks(tick_marks, tick_marks, rotation=45)
+    plt.yticks(tick_marks, tick_marks)
 
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
@@ -195,3 +195,4 @@ def plot_confusion_matrix(truth, pred, classes, normalize=False, title=''):
     plt.xlabel('Predicted label')
     plt.grid(False)
     plt.tight_layout()
+    return fig
