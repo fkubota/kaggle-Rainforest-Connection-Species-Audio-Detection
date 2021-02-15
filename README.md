@@ -405,17 +405,20 @@ hoge
 	- 背景の情報をどれだけ使っているかを見極めるために、labelに関係なくクロップする
 	- result
 		- run001
-		- 完全にランダムでもaccuracyが0.5049あるのか...
-		- oof_lwlrap: 0.658
-		- oof_accuracy: 0.5049
+			- 完全にランダムでもaccuracyが0.5049あるのか...
+			- oof_lwlrap: 0.658
+			- oof_accuracy: 0.5049
 
 ### 20200213
 - exp014
 	- base: exp013(lwlrap=0.658)
 	- consusion_matrixを実装
 	- result
+		- confusion_matrixを見る感じ、相変わらずclass3が苦手っぽい。
+		- ↑のことから、背景で学習してるとは判断できない。もしさらに調査するならラベルが混入してないか確認しながらやるべき。
 		- run001
 
+### 20200214
 - exp015
 	- base: exp013(lwlrap=0.658)
 	- mono_to_colorを改造してhpssを入れる
