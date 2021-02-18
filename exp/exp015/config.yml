@@ -14,7 +14,7 @@ path:
   dir_save_ignore: '../../data_ignore/exp/'
 
 dataset:
-  name: SpectrogramDataset
+  name: SpectrogramDatasetWithHPSS
   params:
     period: 5
     shift_duration: 4
@@ -27,7 +27,7 @@ dataset:
 
 loader:
   train:
-    batch_size: 30
+    batch_size: 20
     # batch_size: 3
     shuffle: True
     num_workers: 2

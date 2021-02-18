@@ -1,6 +1,5 @@
 from icecream import ic
 from ipdb import set_trace as st
-from loguru import logger
 import cv2
 import librosa
 import librosa.display
@@ -95,7 +94,7 @@ class SpectrogramDataset(data.Dataset):
         # -----
 
         # 入力画像の加工
-        image = mono_to_color(melspec)
+        image = mono_to_color_with_hpss(melspec)
         height, width, _ = image.shape
         image = cv2.resize(
                 image,
