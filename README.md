@@ -418,7 +418,10 @@ hoge
 		- ↑のことから、背景で学習してるとは判断できない。もしさらに調査するならラベルが混入してないか確認しながらやるべき。
 		- run001
 
-### 20200214
+### 20200215
 - exp015
 	- base: exp013(lwlrap=0.658)
 	- mono_to_colorを改造してhpssを入れる
+	- imageの3枚をoriginal, original_p, original_h みたいな構成を取る。
+	- result
+		- run001
